@@ -1,0 +1,23 @@
+{
+  "name": "knowledge-management-core",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/dianrahmaji/knowledge-management-core.git",
+  "author": "dianrahmaji <dianrahmaji@gmail.com>",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.2.3",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
