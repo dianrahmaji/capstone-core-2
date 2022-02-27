@@ -6,7 +6,8 @@
   "author": "dianrahmaji <dianrahmaji@gmail.com>",
   "type": "module",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index",
+    "start:dev": "nodemon index.js"
   },
   "license": "MIT",
   "dependencies": {
