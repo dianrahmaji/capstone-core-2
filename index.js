@@ -8,6 +8,7 @@ import connectDB from './config/db.js'
 import { notFound, errorHandler } from './middlewares/errorMiddleware.js'
 
 import userRoute from './routes/userRoute.js'
+import adminRoute from './routes/adminRoute.js'
 
 dotenv.config()
 
@@ -30,6 +31,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/users', userRoute)
+app.use('/api/admin', adminRoute)
 
 app.use(notFound)
 app.use(errorHandler)
