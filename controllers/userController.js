@@ -95,12 +95,31 @@ const getUserById = asyncHandler(async (req, res) => {
 // @access Private/Admin
 const approveUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id).select('-password')
+  const { fullName, email, userId, faculty, major, accountType } = req.body
 
   if (user) {
-    user.isApproved = true
+    user.fullName = fullName
+    user.email = email
+    user.userId = userId
+    user.faculty = faculty
+    user.major = major
+    user.accountType = accountType
 
-    const approvedUser = await user.save()
-    res.status(200).json(approvedUser)
+    const updatedUser = await user.save()
+    res.status(200).json(updatedUser)
+  } else {
+    res.status(404)
+    throw new Error('User not found')
+  }
+})
+
+// @desc Update user
+// @route PUT /api/users/:id
+// @access Private/Admin
+const updateUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id).select('-password')
+
+  if (user) {
   } else {
     res.status(404)
     throw new Error('User not found')
@@ -128,5 +147,6 @@ export {
   getUsers,
   getUserById,
   approveUser,
+  updateUser,
   deleteUser
 }

@@ -5,6 +5,7 @@ import {
   getUsers,
   getUserById,
   approveUser,
+  updateUser,
   deleteUser
 } from '../controllers/userController.js'
 import { protect, admin } from '../middlewares/authMiddleware.js'
@@ -16,6 +17,7 @@ router.post('/login', authUser)
 router
   .route('/:id')
   .get(protect, admin, getUserById)
+  .put(protect, admin, updateUser)
   .delete(protect, admin, deleteUser)
 router.route('/:id/approve').put(protect, admin, approveUser)
 
