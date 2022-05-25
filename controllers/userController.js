@@ -95,6 +95,23 @@ const getUserById = asyncHandler(async (req, res) => {
 // @access Private/Admin
 const approveUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id).select('-password')
+
+  if (user) {
+    user.isApproved = true
+
+    const approvedUser = user.save()
+    res.status(200).json(approveUser)
+  } else {
+    res.status(404)
+    throw new Error('User not found')
+  }
+})
+
+// @desc Update user
+// @route PUT /api/users/:id
+// @access Private/Admin
+const updateUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id).select('-password')
   const { fullName, email, userId, faculty, major, accountType } = req.body
 
   if (user) {
@@ -107,19 +124,6 @@ const approveUser = asyncHandler(async (req, res) => {
 
     const updatedUser = await user.save()
     res.status(200).json(updatedUser)
-  } else {
-    res.status(404)
-    throw new Error('User not found')
-  }
-})
-
-// @desc Update user
-// @route PUT /api/users/:id
-// @access Private/Admin
-const updateUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id).select('-password')
-
-  if (user) {
   } else {
     res.status(404)
     throw new Error('User not found')
