@@ -7,7 +7,9 @@
   "type": "module",
   "scripts": {
     "start": "node index",
-    "start:dev": "nodemon index.js"
+    "start:dev": "nodemon index.js",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "license": "MIT",
   "dependencies": {
@@ -22,6 +24,8 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "c8": "^7.11.3",
+    "nodemon": "^2.0.15",
+    "vitest": "^0.15.0"
   }
 }
