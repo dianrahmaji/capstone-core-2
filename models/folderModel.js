@@ -9,7 +9,8 @@ const folderSchema = mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Document'
       }
-    ]
+    ],
+    authors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
   },
   {
     timestamps: true
