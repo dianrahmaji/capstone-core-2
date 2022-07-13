@@ -100,7 +100,7 @@ const approveUser = asyncHandler(async (req, res) => {
     user.isApproved = true
 
     const approvedUser = user.save()
-    res.status(200).json(approveUser)
+    res.status(200).json(approvedUser)
   } else {
     res.status(404)
     throw new Error('User not found')

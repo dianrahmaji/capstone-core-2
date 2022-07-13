@@ -9,7 +9,7 @@ import { notFound, errorHandler } from './middlewares/errorMiddleware.js'
 
 import userRoute from './routes/userRoute.js'
 import adminRoute from './routes/adminRoute.js'
-import repositoryRoute from './routes/repositoryRoute.js'
+import teamRoute from './routes/teamRoute.js'
 
 dotenv.config()
 
@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/users', userRoute)
 app.use('/api/admin', adminRoute)
-app.use('/api/repository', repositoryRoute)
+app.use('/api/team', teamRoute)
 
 app.use(notFound)
 app.use(errorHandler)
