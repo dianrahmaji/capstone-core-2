@@ -56,4 +56,22 @@ const getTeamById = asyncHandler(async (req, res) => {
   res.status(200).json(team)
 })
 
-export { createTeam, approveTeam, getTeamById, getTeams }
+// @desc Update Team
+// @route PUT /api/team/:id
+// @access Private/User
+const updateTeam = asyncHandler(async (req, res) => {
+  const team = await Team.findById(req.params.id)
+  const { name } = req.body
+
+  if (!team) {
+    res.status(404)
+    throw new Error('Team not found')
+  }
+
+  team.name = name
+  const updatedTeam = team.save()
+
+  res.status(204).json(updatedTeam)
+})
+
+export { createTeam, approveTeam, getTeamById, getTeams, updateTeam }

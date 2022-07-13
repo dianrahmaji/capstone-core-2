@@ -3,14 +3,15 @@ import {
   createTeam,
   approveTeam,
   getTeamById,
-  getTeams
+  getTeams,
+  updateTeam
 } from '../controllers/teamController.js'
 import { admin, protect } from '../middlewares/authMiddleware.js'
 
 const router = express.Router()
 
 router.route('/').post(protect, createTeam).get(protect, admin, getTeams)
-router.route('/:id').get(protect, getTeamById)
+router.route('/:id').get(protect, getTeamById).put(protect, updateTeam)
 router.route('/:id/approve').put(protect, admin, approveTeam)
 
 export default router
