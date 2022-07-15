@@ -10,6 +10,7 @@ const folderSchema = mongoose.Schema(
         ref: 'Document'
       }
     ],
+    folders: [this],
     authors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
   },
   {

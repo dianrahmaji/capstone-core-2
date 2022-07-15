@@ -13,7 +13,11 @@ const teamSchema = mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
       }
-    ]
+    ],
+    administrator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
   },
   { timestamps: true }
 )
