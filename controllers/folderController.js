@@ -45,4 +45,23 @@ const getAllChildrenById = asyncHandler(async (req, res) => {
   res.status(200).json(children)
 })
 
-export { createFolder, getAllChildrenById }
+// @desc Update Folder by Id
+// @route PUT /api/folder/:id
+// @access Private/User
+const updateFolder = asyncHandler(async (req, res) => {
+  const folder = await Folder.findById(req.params.id)
+  const { title, description } = req.body
+
+  if (!folder) {
+    res.status(404)
+    throw new Error('Folder not found')
+  }
+
+  folder.title = title
+  folder.description = description
+
+  const updatedFolder = await folder.save()
+  res.status(200).json(updatedFolder)
+})
+
+export { createFolder, getAllChildrenById, updateFolder }
