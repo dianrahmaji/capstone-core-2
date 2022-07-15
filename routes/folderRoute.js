@@ -15,3 +15,5 @@ router
   .get(protect, getAllChildrenById)
   .put(protect, updateFolder)
   .delete(protect, deleteFolder)
+
+export default router

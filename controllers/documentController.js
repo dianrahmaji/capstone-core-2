@@ -41,4 +41,13 @@ const getDocumentById = asyncHandler(async (req, res) => {
   res.status(200).json(document)
 })
 
-export { createDocument, getDocumentById }
+// @desc Delete Document by Id
+// @route DELETE /api/document/:id
+// @access Private/User
+const deleteDocument = asyncHandler(async (req, res) => {
+  Document.findByIdAndDelete(req.params.id)
+
+  res.send(201).json({ message: 'Document has been deleted' })
+})
+
+export { createDocument, getDocumentById, deleteDocument }
