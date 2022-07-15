@@ -32,4 +32,13 @@ const createDocument = asyncHandler(async (req, res) => {
   res.status(201).json(document)
 })
 
-export { createDocument }
+// @desc Get Document by Id
+// @route GET /api/document/:id
+// @access Private/User
+const getDocumentById = asyncHandler(async (req, res) => {
+  const document = await Document.findById(req.params.id)
+
+  res.status(200).json(document)
+})
+
+export { createDocument, getDocumentById }
