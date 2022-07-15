@@ -1,4 +1,5 @@
 import asyncHandler from 'express-async-handler'
+import Document from '../models/documentModel.js'
 import Folder from '../models/folderModel.js'
 
 // @desc Create Folder
@@ -64,4 +65,28 @@ const updateFolder = asyncHandler(async (req, res) => {
   res.status(200).json(updatedFolder)
 })
 
-export { createFolder, getAllChildrenById, updateFolder }
+// @desc Delete Folder by Id
+// @route DELETE /api/folder/:id
+// @access Private/User
+const deleteFolder = asyncHandler(async (req, res) => {
+  const folder = await Folder.findById(req.params.id)
+    .populate('folders', '_id')
+    .populate('documents', '_id')
+    .exec()
+
+  Document.deleteMany({
+    _id: {
+      $in: folder.documents.map(d => d._id)
+    }
+  })
+
+  Folder.deleteMany({
+    _id: {
+      $in: [req.params.id, ...folder.folders.map(f => f._id)]
+    }
+  })
+
+  res.status(204).json({ message: 'Folder deleted successfully' })
+})
+
+export { createFolder, getAllChildrenById, updateFolder, deleteFolder }
