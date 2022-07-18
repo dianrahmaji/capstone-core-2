@@ -1,5 +1,6 @@
 import express from 'express'
 import {
+  addMember,
   createTeam,
   approveTeam,
   getTeamById,
@@ -12,6 +13,7 @@ const router = express.Router()
 
 router.route('/').post(protect, createTeam).get(protect, admin, getTeams)
 router.route('/:id').get(protect, getTeamById).put(protect, updateTeam)
+router.route('/:id/add').put(protect, addMember)
 router.route('/:id/approve').put(protect, admin, approveTeam)
 
 export default router

@@ -74,4 +74,19 @@ const updateTeam = asyncHandler(async (req, res) => {
   res.status(204).json(updatedTeam)
 })
 
-export { createTeam, approveTeam, getTeamById, getTeams, updateTeam }
+// @desc Add Member to Team
+// @route PUT /api/team/:id/add
+// @access Private/User
+const addMember = asyncHandler(async (req, res) => {
+  const userId = req.body.userId
+
+  const team = await Team.findByIdAndUpdate(req.params.id, {
+    $push: {
+      members: userId
+    }
+  })
+
+  res.status(201).json(team)
+})
+
+export { createTeam, approveTeam, getTeamById, getTeams, updateTeam, addMember }
