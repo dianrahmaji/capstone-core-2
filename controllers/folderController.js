@@ -51,12 +51,13 @@ const getAllChildrenById = asyncHandler(async (req, res) => {
 // @access Private/User
 const updateFolder = asyncHandler(async (req, res) => {
   const folder = await Folder.findById(req.params.id)
-  const { title, description } = req.body
 
   if (!folder) {
     res.status(404)
     throw new Error('Folder not found')
   }
+
+  const { title, description } = req.body
 
   folder.title = title
   folder.description = description

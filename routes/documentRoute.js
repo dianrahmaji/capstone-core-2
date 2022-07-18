@@ -2,7 +2,8 @@ import express from 'express'
 import {
   createDocument,
   deleteDocument,
-  getDocumentById
+  getDocumentById,
+  updateDocument
 } from '../controllers/documentController.js'
 import { protect } from '../middlewares/authMiddleware.js'
 
@@ -13,5 +14,6 @@ router
   .route('/:id')
   .get(protect, getDocumentById)
   .delete(protect, deleteDocument)
+  .put(protect, updateDocument)
 
 export default router

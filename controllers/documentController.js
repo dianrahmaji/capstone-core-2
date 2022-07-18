@@ -50,4 +50,28 @@ const deleteDocument = asyncHandler(async (req, res) => {
   res.send(201).json({ message: 'Document has been deleted' })
 })
 
-export { createDocument, getDocumentById, deleteDocument }
+// @desc Update Document By Id
+// @route PUT /api/document/:id
+// @access Private/User
+const updateDocument = asyncHandler(async (req, res) => {
+  const document = await Document.findById(req.params.id)
+
+  if (!folder) {
+    res.status(404)
+    throw new Error('Document not found')
+  }
+
+  const { title, description, type, link, authors } = req.body
+
+  document.title = title
+  document.description = description
+  document.type = type
+  document.link = link
+
+  // TODO: Update/Add authors
+
+  const updatedDocument = await document.save()
+  res.status(200).json(updatedDocument)
+})
+
+export { createDocument, getDocumentById, deleteDocument, updateDocument }
