@@ -72,7 +72,7 @@ const registerUser = asyncHandler(async (req, res) => {
 // @route GET /api/users
 // @access Private/Admin
 const getUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({ isAdmin: false })
+  const users = await User.find({ isAdmin: { $eq: false } })
   res.json(users)
 })
 
@@ -145,6 +145,22 @@ const deleteUser = asyncHandler(async (req, res) => {
   }
 })
 
+// @docs Search User by email
+// @route GET /api/users/search
+// @access Private/User
+const searchUser = asyncHandler(async (req, res) => {
+  const email = req.query.email
+
+  const foundUser = await User.find({
+    email: new RegExp(email),
+    isAdmin: { $eq: false }
+  })
+    .select('_id name email')
+    .limit(10)
+
+  res.status(200).json(foundUser)
+})
+
 export {
   authUser,
   registerUser,
@@ -152,5 +168,6 @@ export {
   getUserById,
   approveUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  searchUser
 }
