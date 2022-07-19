@@ -161,6 +161,20 @@ const searchUser = asyncHandler(async (req, res) => {
   res.status(200).json(foundUser)
 })
 
+// @desc Get all teams by User id
+// @route GET /api/user/:id/team
+// @access Private/User
+const getTeamsByUserId = asyncHandler(async (req, res) => {
+  const { teams } = await User.findById(req.params.id)
+    .populate({
+      path: 'teams',
+      select: ['_id', 'name', 'isApproved']
+    })
+    .exec()
+
+  res.status(200).json(teams)
+})
+
 export {
   authUser,
   registerUser,
@@ -169,5 +183,6 @@ export {
   approveUser,
   updateUser,
   deleteUser,
-  searchUser
+  searchUser,
+  getTeamsByUserId
 }

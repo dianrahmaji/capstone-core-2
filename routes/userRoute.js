@@ -7,7 +7,8 @@ import {
   approveUser,
   updateUser,
   deleteUser,
-  searchUser
+  searchUser,
+  getTeamsByUserId
 } from '../controllers/userController.js'
 import { protect, admin } from '../middlewares/authMiddleware.js'
 
@@ -21,6 +22,7 @@ router
   .get(protect, admin, getUserById)
   .put(protect, admin, updateUser)
   .delete(protect, admin, deleteUser)
+router.route('/:id/team').get(protect, getTeamsByUserId)
 router.route('/:id/approve').put(protect, admin, approveUser)
 
 export default router

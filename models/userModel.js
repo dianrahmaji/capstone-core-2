@@ -11,7 +11,13 @@ const userSchema = mongoose.Schema(
     accountType: { type: String, required: true },
     password: { type: String, required: true },
     isAdmin: { type: Boolean, required: true, default: false },
-    isApproved: { type: Boolean, required: true, default: false }
+    isApproved: { type: Boolean, required: true, default: false },
+    teams: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Team'
+      }
+    ]
   },
   { timestamps: true }
 )
