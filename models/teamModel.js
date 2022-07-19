@@ -3,7 +3,11 @@ import mongoose from 'mongoose'
 const teamSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
-    isApproved: { type: Boolean, required: true, default: false },
+    stats: {
+      type: String,
+      enum: ['accepted', 'pending', 'rejected', 'updated'],
+      default: 'pending'
+    },
     repository: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Repository'
