@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler'
-import Document from '../models/documentModel'
-import Folder from '../models/folderModel'
+import Document from '../models/documentModel.js'
+import Folder from '../models/folderModel.js'
 
 // @desc Create Document
 // @route POST /api/document

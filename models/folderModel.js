@@ -10,13 +10,16 @@ const folderSchema = mongoose.Schema(
         ref: 'Document'
       }
     ],
-    folders: [this],
     authors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
   },
   {
     timestamps: true
   }
 )
+
+folderSchema.add({
+  folders: [folderSchema]
+})
 
 const Folder = mongoose.model('Folder', folderSchema)
 
