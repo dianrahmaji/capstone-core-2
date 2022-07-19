@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 const teamSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
-    stats: {
+    status: {
       type: String,
       enum: ['accepted', 'pending', 'rejected', 'updated'],
       default: 'pending'
