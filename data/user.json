@@ -1,0 +1,35 @@
+[
+  {
+    "fullName": "admin",
+    "email": "admin@admin.com",
+    "userId": "123456",
+    "faculty": "Engineering",
+    "major": "Information Technology",
+    "accountType": "lecturer",
+    "password": "admin123",
+    "isAdmin": true,
+    "isApproved": true
+  },
+  {
+    "fullName": "Lecturer",
+    "email": "lecturer@lecturer.com",
+    "userId": "987654",
+    "faculty": "Engineering",
+    "major": "Information Technology",
+    "accountType": "lecturer",
+    "password": "lectuter",
+    "isAdmin": false,
+    "isApproved": true
+  },
+  {
+    "fullName": "Dian Rahmaji",
+    "email": "dianrahmaji@gmail.com",
+    "userId": "413896",
+    "faculty": "Engineering",
+    "major": "Information Technology",
+    "accountType": "student",
+    "password": "dianrahmaji",
+    "isAdmin": false,
+    "isApproved": true
+  }
+]

@@ -10,7 +10,8 @@
     "start:dev": "nodemon index.js",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "data:destroy": "node data/seeder -d"
+    "data:destroy": "node --experimental-json-modules data/seeder -d",
+    "data:seed": "node --experimental-json-modules data/seeder"
   },
   "license": "MIT",
   "dependencies": {
