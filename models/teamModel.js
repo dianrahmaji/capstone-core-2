@@ -6,11 +6,16 @@ const teamSchema = mongoose.Schema(
     status: {
       type: String,
       enum: ['accepted', 'pending', 'rejected', 'updated'],
-      default: 'pending'
+      default: 'pending',
+      required: true
     },
     repository: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Repository'
+    },
+    administrator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
     },
     members: [
       {
@@ -18,10 +23,12 @@ const teamSchema = mongoose.Schema(
         ref: 'User'
       }
     ],
-    administrator: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    }
+    messages: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Message'
+      }
+    ]
   },
   { timestamps: true }
 )

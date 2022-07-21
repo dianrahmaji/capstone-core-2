@@ -1,19 +1,26 @@
 import asyncHandler from 'express-async-handler'
 import Repository from '../models/repositoryModel.js'
 import Team from '../models/teamModel.js'
+import User from '../models/userModel.js'
 
 // @desc Create Team
 // @route POST /api/team
 // @access Private/User
 const createTeam = asyncHandler(async (req, res) => {
-  const { teamName: name, ...data } = req.body
+  const { name, administrator, ...data } = req.body
 
-  const team = await Team.create({ name })
+  const team = await Team.create({ name, administrator })
 
   const repository = await Repository.create(data)
 
   team.repository = repository
   await team.save()
+
+  await User.findByIdAndUpdate(administrator, {
+    $push: {
+      teams: team._id
+    }
+  })
 
   res.status(201).json(repository)
 })

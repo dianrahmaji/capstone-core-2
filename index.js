@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
   })
 })
 
-app.use('/api/users', userRoute)
+app.use('/api/user', userRoute)
 app.use('/api/admin', adminRoute)
 app.use('/api/team', teamRoute)
 app.use('/api/folder', folderRoute)

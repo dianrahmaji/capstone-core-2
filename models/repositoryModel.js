@@ -6,12 +6,6 @@ const repositorySchema = mongoose.Schema(
     description: { type: String, required: true },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
-    messages: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Message'
-      }
-    ],
     folders: [
       {
         type: mongoose.Schema.Types.ObjectId,
