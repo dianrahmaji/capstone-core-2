@@ -165,12 +165,14 @@ const searchUser = asyncHandler(async (req, res) => {
 // @route GET /api/user/:id/team
 // @access Private/User
 const getTeamsByUserId = asyncHandler(async (req, res) => {
-  const { teams } = await User.findById(req.params.id)
+  const user = await User.findById(req.params.id)
     .populate({
       path: 'teams',
       select: ['_id', 'name', 'isApproved']
     })
     .exec()
+
+  const { teams } = user
 
   res.status(200).json(teams)
 })
