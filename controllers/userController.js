@@ -171,12 +171,14 @@ const getTeamsByUserId = asyncHandler(async (req, res) => {
       select: ['_id', 'name', 'status'],
       populate: {
         path: 'repository',
-        select: ['title', 'description']
+        select: ['title', 'description', 'startDate', 'endDate']
       }
     })
     .exec()
 
   const { teams } = user
+
+  console.log(teams)
 
   res.status(200).json(teams)
 })
