@@ -168,7 +168,11 @@ const getTeamsByUserId = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id)
     .populate({
       path: 'teams',
-      select: ['_id', 'name', 'isApproved']
+      select: ['_id', 'name', 'status'],
+      populate: {
+        path: 'repository',
+        select: ['title', 'description']
+      }
     })
     .exec()
 
