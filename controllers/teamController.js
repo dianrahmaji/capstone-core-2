@@ -120,4 +120,24 @@ const addMember = asyncHandler(async (req, res) => {
   res.status(201).json(team)
 })
 
-export { createTeam, approveTeam, getTeamById, getTeams, updateTeam, addMember }
+/**
+ * @desc Delete Team by Id
+ * @route DELETE /api/team/:id
+ * @access Private/User
+ */
+const deleteTeam = asyncHandler(async (req, res) => {
+  const team = await Team.findByIdAndDelete(req.params.id)
+  Repository.findByIdAndDelete(team.repository._id)
+
+  res.status(204).json({ message: 'team deleted successfully' })
+})
+
+export {
+  createTeam,
+  approveTeam,
+  getTeamById,
+  getTeams,
+  updateTeam,
+  addMember,
+  deleteTeam
+}
