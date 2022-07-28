@@ -46,6 +46,11 @@ const approveTeam = asyncHandler(async (req, res) => {
 // @access Private/Admin
 const getTeams = asyncHandler(async (req, res) => {
   const teams = await Team.find({})
+    .select(['administrator', 'members', 'name', 'status'])
+    .populate({
+      path: 'repository',
+      select: ['description', 'startDate', 'endDate', 'title']
+    })
   res.status(200).json(teams)
 })
 
