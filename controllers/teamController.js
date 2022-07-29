@@ -27,12 +27,14 @@ const createTeam = asyncHandler(async (req, res) => {
 
 /**
  * @desc Approve/Reject Team
- * @route PUT /api/team/:id?approve={approve}
+ * @route PUT /api/team/:id?/approve?value={approve}
  * @access Private/Admin
  */
 const approveTeam = asyncHandler(async (req, res) => {
   const team = await Team.findById(req.params.id)
-  const approval = req.query.approve === 'true' ? 'accepted' : 'rejected'
+  const approval = req.query.value === 'true' ? 'accepted' : 'rejected'
+
+  console.log(team)
 
   if (!team) {
     res.status(404)
