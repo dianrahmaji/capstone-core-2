@@ -31,5 +31,16 @@
     "password": "dianrahmaji",
     "isAdmin": false,
     "isApproved": true
+  },
+  {
+    "fullName": "Dzakiy Harissalam",
+    "email": "dzakiy@gmail.com",
+    "userId": "413897",
+    "faculty": "Engineering",
+    "major": "Information Technology",
+    "accountType": "student",
+    "password": "dzakiyharissalam",
+    "isAdmin": false,
+    "isApproved": true
   }
 ]

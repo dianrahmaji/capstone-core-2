@@ -149,13 +149,13 @@ const deleteUser = asyncHandler(async (req, res) => {
 // @route GET /api/users/search
 // @access Private/User
 const searchUser = asyncHandler(async (req, res) => {
-  const email = req.query.email
+  const { param } = req.query
 
   const foundUser = await User.find({
-    email: new RegExp(email),
+    $or: [{ email: new RegExp(param) }, { fullName: new RegExp(param) }],
     isAdmin: { $eq: false }
   })
-    .select('_id name email')
+    .select('_id fullName email')
     .limit(10)
 
   res.status(200).json(foundUser)
