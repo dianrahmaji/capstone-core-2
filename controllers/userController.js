@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler'
 import generateToken from '../utils/generateToken.js'
 import User from '../models/userModel.js'
+import Team from '../models/teamModel.js'
 
 // @desc Auth user & get token
 // @route POST /api/users/login
@@ -165,18 +166,15 @@ const searchUser = asyncHandler(async (req, res) => {
 // @route GET /api/user/:id/team
 // @access Private/User
 const getTeamsByUserId = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id)
-    .populate({
-      path: 'teams',
-      select: ['_id', 'name', 'status'],
-      populate: {
-        path: 'repository',
-        select: ['title', 'description', 'startDate', 'endDate']
-      }
-    })
-    .exec()
+  let status = req.query.accepted ? { $eq: 'accepted' } : { $ne: 'accepted' }
 
-  const { teams } = user
+  const teams = await Team.find({
+    $or: [
+      { administrator: { $eq: req.params.id } },
+      { members: { $in: [req.params.id] } }
+    ],
+    status
+  })
 
   console.log(teams)
 
