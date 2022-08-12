@@ -6,7 +6,8 @@ import {
   getTeamById,
   getTeams,
   updateTeam,
-  deleteTeam
+  deleteTeam,
+  deleteMember
 } from '../controllers/teamController.js'
 import { admin, protect } from '../middlewares/authMiddleware.js'
 
@@ -18,7 +19,8 @@ router
   .get(protect, getTeamById)
   .put(protect, updateTeam)
   .delete(protect, deleteTeam)
-router.route('/:id/add').put(protect, addMember)
+router.route('/:id/member').put(protect, addMember)
+router.route('/:teamId/member/:memberId').delete(protect, deleteMember)
 router.route('/:id/approve').put(protect, admin, approveTeam)
 
 export default router

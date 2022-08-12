@@ -156,7 +156,7 @@ const searchUser = asyncHandler(async (req, res) => {
     $or: [{ email: new RegExp(param) }, { fullName: new RegExp(param) }],
     isAdmin: { $eq: false }
   })
-    .select('_id fullName email')
+    .select('_id fullName email faculty accountType')
     .limit(10)
 
   res.status(200).json(foundUser)

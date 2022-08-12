@@ -64,6 +64,18 @@ const getTeams = asyncHandler(async (req, res) => {
 // @access Private/User
 const getTeamById = asyncHandler(async (req, res) => {
   const team = await Team.findById(req.params.id)
+    .populate({
+      path: 'repository',
+      select: ['description', 'startDate', 'endDate', 'title']
+    })
+    .populate({
+      path: 'administrator',
+      select: ['fullName', 'faculty', 'accountType']
+    })
+    .populate({
+      path: 'members',
+      select: ['fullName', 'faculty', 'accountType']
+    })
 
   if (!team) {
     res.status(404)
@@ -116,7 +128,7 @@ const updateTeam = asyncHandler(async (req, res) => {
 })
 
 // @desc Add Member to Team
-// @route PUT /api/team/:id/add
+// @route PUT /api/team/:id/member
 // @access Private/User
 const addMember = asyncHandler(async (req, res) => {
   const userId = req.body.userId
@@ -128,6 +140,21 @@ const addMember = asyncHandler(async (req, res) => {
   })
 
   res.status(201).json(team)
+})
+
+/**
+ * @desc Delete Member from Team
+ * @route DELETE /api/team/:teamId/member/:memberId
+ * @access Private/User
+ */
+const deleteMember = asyncHandler(async (req, res) => {
+  await Team.findByIdAndUpdate(req.params.teamId, {
+    $pull: {
+      members: req.params.memberId
+    }
+  })
+
+  res.status(204).json({ message: 'Member deleted successfully' })
 })
 
 /**
@@ -149,5 +176,6 @@ export {
   getTeams,
   updateTeam,
   addMember,
+  deleteMember,
   deleteTeam
 }
