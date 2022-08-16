@@ -168,13 +168,18 @@ const searchUser = asyncHandler(async (req, res) => {
 const getTeamsByUserId = asyncHandler(async (req, res) => {
   let status = req.query.accepted ? { $eq: 'accepted' } : { $ne: 'accepted' }
 
-  const teams = await Team.find({
-    $or: [
-      { administrator: { $eq: req.params.id } },
-      { members: { $in: [req.params.id] } }
-    ],
-    status
-  })
+  const $or = [
+    { administrator: { $eq: req.params.id } },
+    { members: { $in: [req.params.id] } }
+  ]
+
+  let query = { $or }
+
+  if (!req.query.all) {
+    query = { ...query, status }
+  }
+
+  const teams = await Team.find(query)
     .populate({ path: 'administrator', select: 'fullName faculty accountType' })
     .populate({ path: 'members', select: 'fullName faculty accountType' })
     .populate({

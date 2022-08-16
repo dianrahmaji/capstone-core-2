@@ -19,8 +19,10 @@ router
   .get(protect, getTeamById)
   .put(protect, updateTeam)
   .delete(protect, deleteTeam)
-router.route('/:id/member').put(protect, addMember)
-router.route('/:teamId/member/:memberId').delete(protect, deleteMember)
+router
+  .route('/:teamId/member/:memberId')
+  .put(protect, addMember)
+  .delete(protect, deleteMember)
 router.route('/:id/approve').put(protect, admin, approveTeam)
 
 export default router

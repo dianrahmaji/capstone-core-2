@@ -131,11 +131,9 @@ const updateTeam = asyncHandler(async (req, res) => {
 // @route PUT /api/team/:id/member
 // @access Private/User
 const addMember = asyncHandler(async (req, res) => {
-  const userId = req.body.userId
-
-  const team = await Team.findByIdAndUpdate(req.params.id, {
+  const team = await Team.findByIdAndUpdate(req.params.teamId, {
     $push: {
-      members: userId
+      members: req.params.userId
     }
   })
 
