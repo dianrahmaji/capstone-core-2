@@ -1,4 +1,5 @@
 import asyncHandler from 'express-async-handler'
+import Chat from '../models/chatModel.js'
 import Repository from '../models/repositoryModel.js'
 import Team from '../models/teamModel.js'
 import User from '../models/userModel.js'
@@ -12,8 +13,11 @@ const createTeam = asyncHandler(async (req, res) => {
   const team = await Team.create({ name, administrator })
 
   const repository = await Repository.create(data)
+  const chat = await Chat.create({})
+  console.log(chat)
 
   team.repository = repository
+  team.chat = chat
   await team.save()
 
   await User.findByIdAndUpdate(administrator, {

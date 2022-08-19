@@ -23,12 +23,10 @@ const teamSchema = mongoose.Schema(
         ref: 'User'
       }
     ],
-    messages: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Message'
-      }
-    ]
+    chat: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Chat'
+    }
   },
   { timestamps: true }
 )

@@ -12,6 +12,7 @@ import adminRoute from './routes/adminRoute.js'
 import teamRoute from './routes/teamRoute.js'
 import folderRoute from './routes/folderRoute.js'
 import documentRoute from './routes/documentRoute.js'
+import chatRoute from './routes/chatRoute.js'
 
 dotenv.config()
 
@@ -38,6 +39,7 @@ app.use('/api/admin', adminRoute)
 app.use('/api/team', teamRoute)
 app.use('/api/folder', folderRoute)
 app.use('/api/document', documentRoute)
+app.use('/api/chat', chatRoute)
 
 app.use(notFound)
 app.use(errorHandler)

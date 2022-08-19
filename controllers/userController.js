@@ -180,8 +180,11 @@ const getTeamsByUserId = asyncHandler(async (req, res) => {
   }
 
   const teams = await Team.find(query)
-    .populate({ path: 'administrator', select: 'fullName faculty accountType' })
-    .populate({ path: 'members', select: 'fullName faculty accountType' })
+    .populate({
+      path: 'administrator',
+      select: 'fullName faculty accountType email'
+    })
+    .populate({ path: 'members', select: 'fullName faculty accountType email' })
     .populate({
       path: 'repository',
       select: 'startDate endDate title description'
