@@ -1,20 +1,20 @@
-import asyncHandler from 'express-async-handler'
-import generateToken from '../utils/generateToken.js'
-import User from '../models/userModel.js'
-import Team from '../models/teamModel.js'
+import asyncHandler from "express-async-handler";
+import generateToken from "../utils/generateToken.js";
+import User from "../models/userModel.js";
+import Team from "../models/teamModel.js";
 
 // @desc Auth user & get token
 // @route POST /api/users/login
 // @access Public
 const authUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body
+  const { email, password } = req.body;
 
-  const user = await User.findOne({ email })
+  const user = await User.findOne({ email });
 
   if (user && user.matchPassword(password)) {
     if (!user.isApproved) {
-      res.status(403)
-      throw new Error('User not activated')
+      res.status(403);
+      throw new Error("User not activated");
     }
 
     res.json({
@@ -27,28 +27,28 @@ const authUser = asyncHandler(async (req, res) => {
       userId: user.userId,
       isAdmin: user.isAdmin,
       isApproved: user.isApproved,
-      token: generateToken(user._id)
-    })
+      token: generateToken(user._id),
+    });
   } else {
-    res.status(401)
-    throw new Error('Invalid email or password')
+    res.status(401);
+    throw new Error("Invalid email or password");
   }
-})
+});
 
 // @desc Register a new user
 // @route POST /api/users
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
-  const data = req.body
+  const data = req.body;
 
-  const isUserExist = await User.findOne({ email: data.email })
+  const isUserExist = await User.findOne({ email: data.email });
 
   if (isUserExist) {
-    res.status(400)
-    throw new Error('User already exists')
+    res.status(400);
+    throw new Error("User already exists");
   }
 
-  const user = await User.create({ ...data })
+  const user = await User.create({ ...data });
 
   if (user) {
     res.status(201).json({
@@ -61,137 +61,137 @@ const registerUser = asyncHandler(async (req, res) => {
       userId: user.userId,
       isAdmin: user.isAdmin,
       isApproved: user.isApproved,
-      token: generateToken(user._id)
-    })
+      token: generateToken(user._id),
+    });
   } else {
-    res.status(400)
-    throw new Error('Invalid user data')
+    res.status(400);
+    throw new Error("Invalid user data");
   }
-})
+});
 
 // @desc GET all users
 // @route GET /api/users
 // @access Private/Admin
 const getUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({ isAdmin: { $eq: false } })
-  res.json(users)
-})
+  const users = await User.find({ isAdmin: { $eq: false } });
+  res.json(users);
+});
 
 // @desc GET user by id
 // @route GET /api/users/:id
 // @access Private/Admin
 const getUserById = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id).select('-password')
+  const user = await User.findById(req.params.id).select("-password");
 
   if (user) {
-    res.status(200).json(user)
+    res.status(200).json(user);
   } else {
-    res.status(404)
-    throw new Error('User not found')
+    res.status(404);
+    throw new Error("User not found");
   }
-})
+});
 
 // @desc Approve user
 // @route POST /api/users/:id/approve
 // @access Private/Admin
 const approveUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id).select('-password')
+  const user = await User.findById(req.params.id).select("-password");
 
   if (user) {
-    user.isApproved = true
+    user.isApproved = true;
 
-    const approvedUser = user.save()
-    res.status(200).json(approvedUser)
+    const approvedUser = user.save();
+    res.status(200).json(approvedUser);
   } else {
-    res.status(404)
-    throw new Error('User not found')
+    res.status(404);
+    throw new Error("User not found");
   }
-})
+});
 
 // @desc Update user
 // @route PUT /api/users/:id
 // @access Private/Admin
 const updateUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id).select('-password')
-  const { fullName, email, userId, faculty, major, accountType } = req.body
+  const user = await User.findById(req.params.id).select("-password");
+  const { fullName, email, userId, faculty, major, accountType } = req.body;
 
   if (user) {
-    user.fullName = fullName
-    user.email = email
-    user.userId = userId
-    user.faculty = faculty
-    user.major = major
-    user.accountType = accountType
+    user.fullName = fullName;
+    user.email = email;
+    user.userId = userId;
+    user.faculty = faculty;
+    user.major = major;
+    user.accountType = accountType;
 
-    const updatedUser = await user.save()
-    res.status(200).json(updatedUser)
+    const updatedUser = await user.save();
+    res.status(200).json(updatedUser);
   } else {
-    res.status(404)
-    throw new Error('User not found')
+    res.status(404);
+    throw new Error("User not found");
   }
-})
+});
 
 // @desc Delete user
 // @route DELETE /api/users/:id
 // @access Private/Admin
 const deleteUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id)
+  const user = await User.findById(req.params.id);
 
   if (user) {
-    await user.remove()
-    res.status(204).json({ message: 'User deleted successfully' })
+    await user.remove();
+    res.status(204).json({ message: "User deleted successfully" });
   } else {
-    res.status(404)
-    throw new Error('User not found')
+    res.status(404);
+    throw new Error("User not found");
   }
-})
+});
 
 // @docs Search User by email
 // @route GET /api/users/search
 // @access Private/User
 const searchUser = asyncHandler(async (req, res) => {
-  const { param } = req.query
+  const { param } = req.query;
 
   const foundUser = await User.find({
     $or: [{ email: new RegExp(param) }, { fullName: new RegExp(param) }],
-    isAdmin: { $eq: false }
+    isAdmin: { $eq: false },
   })
-    .select('_id fullName email faculty accountType')
-    .limit(10)
+    .select("_id fullName email faculty accountType")
+    .limit(10);
 
-  res.status(200).json(foundUser)
-})
+  res.status(200).json(foundUser);
+});
 
 // @desc Get all teams by User id
 // @route GET /api/user/:id/team
 // @access Private/User
 const getTeamsByUserId = asyncHandler(async (req, res) => {
-  let status = req.query.accepted ? { $eq: 'accepted' } : { $ne: 'accepted' }
+  const status = req.query.accepted ? { $eq: "accepted" } : { $ne: "accepted" };
 
   const $or = [
     { administrator: { $eq: req.params.id } },
-    { members: { $in: [req.params.id] } }
-  ]
+    { members: { $in: [req.params.id] } },
+  ];
 
-  let query = { $or }
+  let query = { $or };
 
   if (!req.query.all) {
-    query = { ...query, status }
+    query = { ...query, status };
   }
 
   const teams = await Team.find(query)
     .populate({
-      path: 'administrator',
-      select: 'fullName faculty accountType email'
+      path: "administrator",
+      select: "fullName faculty accountType email",
     })
-    .populate({ path: 'members', select: 'fullName faculty accountType email' })
+    .populate({ path: "members", select: "fullName faculty accountType email" })
     .populate({
-      path: 'repository',
-      select: 'startDate endDate title description'
-    })
+      path: "repository",
+      select: "startDate endDate title description",
+    });
 
-  res.status(200).json(teams)
-})
+  res.status(200).json(teams);
+});
 
 export {
   authUser,
@@ -202,5 +202,5 @@ export {
   updateUser,
   deleteUser,
   searchUser,
-  getTeamsByUserId
-}
+  getTeamsByUserId,
+};

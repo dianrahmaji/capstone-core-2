@@ -11,7 +11,19 @@
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "data:destroy": "node --experimental-json-modules data/seeder -d",
-    "data:seed": "node --experimental-json-modules data/seeder"
+    "data:seed": "node --experimental-json-modules data/seeder",
+    "lint": "eslint './**/*.{js,ts,md}'",
+    "lint:quiet": "eslint --quiet './**/*.{js,ts,md}'",
+    "lint:fix": "eslint --fix './**/*.{js,ts,md}'",
+    "format:check": "npx prettier --check './**/*.{js,ts,md}'",
+    "format:fix": "npx prettier --write './**/*.{js,ts,md}'",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "./**/*.{js,ts,md}": [
+      "eslint",
+      "prettier --write"
+    ]
   },
   "license": "MIT",
   "dependencies": {
@@ -19,15 +31,22 @@
     "colors": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
+    "eslint": "^7.32.0 || ^8.2.0",
+    "eslint-config-prettier": "^8.5.0",
     "express": "^4.17.3",
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.3",
     "morgan": "^1.10.0",
+    "prettier": "^2.7.1",
     "socket.io": "^4.5.1"
   },
   "devDependencies": {
     "c8": "^7.11.3",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.0.3",
     "nodemon": "^2.0.15",
     "vitest": "^0.15.0"
   }

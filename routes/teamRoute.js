@@ -1,4 +1,4 @@
-import express from 'express'
+import express from "express";
 import {
   addMember,
   createTeam,
@@ -7,22 +7,22 @@ import {
   getTeams,
   updateTeam,
   deleteTeam,
-  deleteMember
-} from '../controllers/teamController.js'
-import { admin, protect } from '../middlewares/authMiddleware.js'
+  deleteMember,
+} from "../controllers/teamController.js";
+import { admin, protect } from "../middlewares/authMiddleware.js";
 
-const router = express.Router()
+const router = express.Router();
 
-router.route('/').post(protect, createTeam).get(protect, admin, getTeams)
+router.route("/").post(protect, createTeam).get(protect, admin, getTeams);
 router
-  .route('/:id')
+  .route("/:id")
   .get(protect, getTeamById)
   .put(protect, updateTeam)
-  .delete(protect, deleteTeam)
+  .delete(protect, deleteTeam);
 router
-  .route('/:teamId/member/:memberId')
+  .route("/:teamId/member/:memberId")
   .put(protect, addMember)
-  .delete(protect, deleteMember)
-router.route('/:id/approve').put(protect, admin, approveTeam)
+  .delete(protect, deleteMember);
+router.route("/:id/approve").put(protect, admin, approveTeam);
 
-export default router
+export default router;

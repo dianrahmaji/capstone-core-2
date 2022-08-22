@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 const documentSchema = mongoose.Schema(
   {
@@ -7,13 +7,13 @@ const documentSchema = mongoose.Schema(
     // TODO: add document type enums
     type: { type: String, required: true },
     link: { type: String, required: true },
-    authors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+    authors: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   {
-    timestamps: true
-  }
-)
+    timestamps: true,
+  },
+);
 
-const Document = mongoose.model('Document', documentSchema)
+const Document = mongoose.model("Document", documentSchema);
 
-export default Document
+export default Document;

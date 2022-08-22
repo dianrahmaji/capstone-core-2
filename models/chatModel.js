@@ -1,19 +1,19 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 const chatSchema = mongoose.Schema(
   {
     messages: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Message'
-      }
-    ]
+        ref: "Message",
+      },
+    ],
   },
   {
-    timestamps: true
-  }
-)
+    timestamps: true,
+  },
+);
 
-const Chat = mongoose.model('Chat', chatSchema)
+const Chat = mongoose.model("Chat", chatSchema);
 
-export default Chat
+export default Chat;

@@ -1,5 +1,5 @@
-import asyncHandler from 'express-async-handler'
-import Chat from '../models/chatModel.js'
+import asyncHandler from "express-async-handler";
+import Chat from "../models/chatModel.js";
 
 /**
  * @desc Get All Messages
@@ -7,17 +7,17 @@ import Chat from '../models/chatModel.js'
  * @access Private/User
  */
 const getAllMessages = asyncHandler(async (req, res) => {
-  const { id } = req.params
+  const { id } = req.params;
 
   const { messages } = await Chat.findById(id).populate({
-    path: 'messages',
+    path: "messages",
     populate: {
-      path: 'sender',
-      select: ['fullName']
-    }
-  })
+      path: "sender",
+      select: ["fullName"],
+    },
+  });
 
-  res.status(200).json(messages)
-})
+  res.status(200).json(messages);
+});
 
-export { getAllMessages }
+export { getAllMessages };

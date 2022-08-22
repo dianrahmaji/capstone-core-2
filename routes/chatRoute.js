@@ -1,9 +1,9 @@
-import express from 'express'
-import { getAllMessages } from '../controllers/chatController.js'
-import { protect } from '../middlewares/authMiddleware.js'
+import express from "express";
+import { getAllMessages } from "../controllers/chatController.js";
+import { protect } from "../middlewares/authMiddleware.js";
 
-const router = express.Router()
+const router = express.Router();
 
-router.route('/:id').get(protect, getAllMessages)
+router.route("/:id").get(protect, getAllMessages);
 
-export default router
+export default router;

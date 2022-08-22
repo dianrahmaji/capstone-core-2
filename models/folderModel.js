@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 const folderSchema = mongoose.Schema(
   {
@@ -7,20 +7,20 @@ const folderSchema = mongoose.Schema(
     documents: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Document'
-      }
+        ref: "Document",
+      },
     ],
-    authors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+    authors: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   {
-    timestamps: true
-  }
-)
+    timestamps: true,
+  },
+);
 
 folderSchema.add({
-  folders: [folderSchema]
-})
+  folders: [folderSchema],
+});
 
-const Folder = mongoose.model('Folder', folderSchema)
+const Folder = mongoose.model("Folder", folderSchema);
 
-export default Folder
+export default Folder;

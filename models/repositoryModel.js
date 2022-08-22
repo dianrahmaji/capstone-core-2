@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 const repositorySchema = mongoose.Schema(
   {
@@ -9,15 +9,15 @@ const repositorySchema = mongoose.Schema(
     folders: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Folder'
-      }
-    ]
+        ref: "Folder",
+      },
+    ],
   },
-  { timestamps: true }
-)
+  { timestamps: true },
+);
 
-const Repository = mongoose.model('Repository', repositorySchema)
+const Repository = mongoose.model("Repository", repositorySchema);
 
-export default Repository
+export default Repository;
 
 // Many to Many https://www.bezkoder.com/mongodb-many-to-many-mongoose/

@@ -1,8 +1,8 @@
-import express from 'express'
-import { authAdmin } from '../controllers/adminController.js'
+import express from "express";
+import { authAdmin } from "../controllers/adminController.js";
 
-const router = express.Router()
+const router = express.Router();
 
-router.post('/login', authAdmin)
+router.post("/login", authAdmin);
 
-export default router
+export default router;

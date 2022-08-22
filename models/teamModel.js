@@ -1,36 +1,36 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 const teamSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
     status: {
       type: String,
-      enum: ['accepted', 'pending', 'rejected', 'updated'],
-      default: 'pending',
-      required: true
+      enum: ["accepted", "pending", "rejected", "updated"],
+      default: "pending",
+      required: true,
     },
     repository: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Repository'
+      ref: "Repository",
     },
     administrator: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+      ref: "User",
     },
     members: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-      }
+        ref: "User",
+      },
     ],
     chat: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Chat'
-    }
+      ref: "Chat",
+    },
   },
-  { timestamps: true }
-)
+  { timestamps: true },
+);
 
-const Team = mongoose.model('Team', teamSchema)
+const Team = mongoose.model("Team", teamSchema);
 
-export default Team
+export default Team;
