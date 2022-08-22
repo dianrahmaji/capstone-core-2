@@ -10,7 +10,11 @@ import User from "../models/userModel.js";
 const createTeam = asyncHandler(async (req, res) => {
   const { name, administrator, ...data } = req.body;
 
-  const team = await Team.create({ name, administrator });
+  const team = await Team.create({
+    name,
+    administrators: [administrator],
+    members: [administrator],
+  });
 
   const repository = await Repository.create(data);
   const chat = await Chat.create({});
@@ -70,10 +74,6 @@ const getTeamById = asyncHandler(async (req, res) => {
       select: ["description", "startDate", "endDate", "title"],
     })
     .populate({
-      path: "administrator",
-      select: ["fullName", "faculty", "accountType"],
-    })
-    .populate({
       path: "members",
       select: ["fullName", "faculty", "accountType"],
     });
@@ -127,11 +127,26 @@ const updateTeam = asyncHandler(async (req, res) => {
 // @route PUT /api/team/:id/member
 // @access Private/User
 const addMember = asyncHandler(async (req, res) => {
-  const team = await Team.findByIdAndUpdate(req.params.teamId, {
+  const { teamId, memberId } = req.params;
+  const { role } = req.query;
+
+  let query = {
     $push: {
-      members: req.params.userId,
+      members: memberId,
     },
-  });
+  };
+
+  if (role === "administrator") {
+    query = {
+      ...query,
+      $push: {
+        ...query.$push,
+        administrators: memberId,
+      },
+    };
+  }
+
+  const team = await Team.findByIdAndUpdate(teamId, query);
 
   res.status(201).json(team);
 });
@@ -145,6 +160,7 @@ const deleteMember = asyncHandler(async (req, res) => {
   await Team.findByIdAndUpdate(req.params.teamId, {
     $pull: {
       members: req.params.memberId,
+      administrators: req.params.memberId,
     },
   });
 

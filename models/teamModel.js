@@ -13,10 +13,12 @@ const teamSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Repository",
     },
-    administrator: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
+    administrators: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     members: [
       {
         type: mongoose.Schema.Types.ObjectId,
