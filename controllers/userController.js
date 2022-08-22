@@ -190,8 +190,6 @@ const getTeamsByUserId = asyncHandler(async (req, res) => {
       select: 'startDate endDate title description'
     })
 
-  console.log(teams)
-
   res.status(200).json(teams)
 })
 

@@ -1,9 +1,11 @@
 import express from 'express'
+import { createServer } from 'http'
 import cors from 'cors'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
 import colors from 'colors'
 
+import { createSocketServer } from './socket/index.js'
 import connectDB from './config/db.js'
 import { notFound, errorHandler } from './middlewares/errorMiddleware.js'
 
@@ -21,6 +23,10 @@ const PORT = process.env.PORT || 5000
 connectDB()
 
 const app = express()
+
+// servers initalization
+const httpServer = createServer(app)
+createSocketServer(httpServer)
 
 // middlewares
 app.use(cors())
@@ -44,4 +50,7 @@ app.use('/api/chat', chatRoute)
 app.use(notFound)
 app.use(errorHandler)
 
-app.listen(PORT, console.log(`Server is running on port ${PORT}`.yellow.bold))
+httpServer.listen(
+  PORT,
+  console.log(`Server is running on port ${PORT}`.yellow.bold)
+)

@@ -14,7 +14,6 @@ const createTeam = asyncHandler(async (req, res) => {
 
   const repository = await Repository.create(data)
   const chat = await Chat.create({})
-  console.log(chat)
 
   team.repository = repository
   team.chat = chat
@@ -37,8 +36,6 @@ const createTeam = asyncHandler(async (req, res) => {
 const approveTeam = asyncHandler(async (req, res) => {
   const team = await Team.findById(req.params.id)
   const approval = req.query.value === 'true' ? 'accepted' : 'rejected'
-
-  console.log(team)
 
   if (!team) {
     res.status(404)
@@ -101,11 +98,6 @@ const updateTeam = asyncHandler(async (req, res) => {
     res.status(404)
     throw new Error('Team not found')
   }
-
-  console.log(req.body)
-
-  console.log(team)
-  console.log(repository)
 
   team.name = name
   if (team.status === 'rejected') {
