@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import mongoose from "mongoose";
 import Chat from "../models/chatModel.js";
+import Message from "../models/messageModel.js";
 
 /**
  * @desc Get Notifications By MemberId and RoomId
@@ -48,6 +49,26 @@ const getNotificationById = asyncHandler(async (req, res) => {
  * @route PUT /api/notification/:roomId/member/:memberId
  * @access Private/User
  */
-const resetNotificationById = asyncHandler(async () => {});
+const resetNotificationById = asyncHandler(async (req, res) => {
+  const { roomId, memberId } = req.params;
+
+  await Message.updateMany(
+    {
+      chat: { $eq: roomId },
+      sender: { $ne: memberId },
+      readBy: {
+        $nin: [memberId],
+      },
+    },
+    {
+      $push: {
+        readBy: memberId,
+      },
+    },
+    { multi: true },
+  ).exec();
+
+  res.status(200).json({ message: "all chats marked as read" });
+});
 
 export { getNotificationById, resetNotificationById };
