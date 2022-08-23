@@ -11,7 +11,7 @@ const authUser = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ email });
 
-  if (user && user.matchPassword(password)) {
+  if (user && (await user.matchPassword(password))) {
     if (!user.isApproved) {
       res.status(403);
       throw new Error("User not activated");
@@ -180,7 +180,10 @@ const getTeamsByUserId = asyncHandler(async (req, res) => {
   }
 
   const teams = await Team.find(query)
-    .populate({ path: "members", select: "fullName faculty accountType email" })
+    .populate({
+      path: "members",
+      select: ["fullName", "email", "faculty", "accountType"],
+    })
     .populate({
       path: "repository",
       select: "startDate endDate title description",

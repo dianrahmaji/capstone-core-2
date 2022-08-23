@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Server } from "socket.io";
 
 import Chat from "../models/chatModel.js";
@@ -25,7 +26,7 @@ export default function createSocketServer(app) {
       await Chat.findByIdAndUpdate(roomId, {
         $push: {
           // eslint-disable-next-line no-underscore-dangle
-          message: message._id,
+          messages: message._id,
         },
       });
 

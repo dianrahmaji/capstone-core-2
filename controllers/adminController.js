@@ -10,7 +10,7 @@ const authAdmin = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ email });
 
-  if (user && user.matchPassword(password)) {
+  if (user && (await user.matchPassword(password))) {
     if (!user.isAdmin) {
       res.status(403);
       throw new Error("Access forbidden");

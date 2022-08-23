@@ -22,12 +22,14 @@ const userSchema = mongoose.Schema(
   { timestamps: true },
 );
 
-userSchema.methods.matchPassword = async (enteredPassword) => {
+// eslint-disable-next-line func-names
+userSchema.methods.matchPassword = async function (enteredPassword) {
   const compared = await bcrypt.compare(enteredPassword, this.password);
   return compared;
 };
 
-userSchema.pre("save", async (next) => {
+// eslint-disable-next-line func-names
+userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) next();
 
   const salt = await bcrypt.genSalt(10);

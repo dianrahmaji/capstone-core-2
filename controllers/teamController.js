@@ -75,7 +75,7 @@ const getTeamById = asyncHandler(async (req, res) => {
     })
     .populate({
       path: "members",
-      select: ["fullName", "faculty", "accountType"],
+      select: ["fullName", "email", "faculty", "accountType"],
     });
 
   if (!team) {
