@@ -16,6 +16,7 @@ import teamRoute from "./routes/teamRoute.js";
 import folderRoute from "./routes/folderRoute.js";
 import documentRoute from "./routes/documentRoute.js";
 import chatRoute from "./routes/chatRoute.js";
+import notificationRoute from "./routes/notificationRoute.js";
 
 dotenv.config();
 
@@ -47,11 +48,13 @@ app.use("/api/team", teamRoute);
 app.use("/api/folder", folderRoute);
 app.use("/api/document", documentRoute);
 app.use("/api/chat", chatRoute);
+app.use("/api/notification", notificationRoute);
 
 app.use(notFound);
 app.use(errorHandler);
 
 httpServer.listen(
   PORT,
+  // eslint-disable-next-line no-console
   console.log(`Server is running on port ${PORT}`.yellow.bold),
 );
