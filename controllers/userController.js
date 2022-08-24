@@ -1,7 +1,9 @@
 import asyncHandler from "express-async-handler";
+import mongoose from "mongoose";
+
 import generateToken from "../utils/generateToken.js";
 import User from "../models/userModel.js";
-import Team from "../models/teamModel.js";
+import { populateTeams } from "../utils/queries.js";
 
 // @desc Auth user & get token
 // @route POST /api/users/login
@@ -168,26 +170,13 @@ const searchUser = asyncHandler(async (req, res) => {
 const getTeamsByUserId = asyncHandler(async (req, res) => {
   const status = req.query.accepted ? { $eq: "accepted" } : { $ne: "accepted" };
 
-  const $or = [
-    { administrator: { $eq: req.params.id } },
-    { members: { $in: [req.params.id] } },
-  ];
-
-  let query = { $or };
+  let query = { members: { $in: [mongoose.Types.ObjectId(req.params.id)] } };
 
   if (!req.query.all) {
-    query = { ...query, status };
+    query = { $and: [query, { status }] };
   }
 
-  const teams = await Team.find(query)
-    .populate({
-      path: "members",
-      select: ["fullName", "email", "faculty", "accountType"],
-    })
-    .populate({
-      path: "repository",
-      select: "startDate endDate title description",
-    });
+  const teams = await populateTeams(query);
 
   res.status(200).json(teams);
 });

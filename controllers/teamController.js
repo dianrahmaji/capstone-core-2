@@ -1,4 +1,8 @@
 import asyncHandler from "express-async-handler";
+import mongoose from "mongoose";
+
+import { populateTeams } from "../utils/queries.js";
+
 import Chat from "../models/chatModel.js";
 import Repository from "../models/repositoryModel.js";
 import Team from "../models/teamModel.js";
@@ -55,12 +59,8 @@ const approveTeam = asyncHandler(async (req, res) => {
 // @route GET /api/team
 // @access Private/Admin
 const getTeams = asyncHandler(async (req, res) => {
-  const teams = await Team.find({})
-    .select(["administrator", "members", "name", "status"])
-    .populate({
-      path: "repository",
-      select: ["description", "startDate", "endDate", "title"],
-    });
+  const query = { _id: { $exists: true } };
+  const teams = await populateTeams(query);
   res.status(200).json(teams);
 });
 
@@ -68,22 +68,17 @@ const getTeams = asyncHandler(async (req, res) => {
 // @route GET /api/team/:id
 // @access Private/User
 const getTeamById = asyncHandler(async (req, res) => {
-  const team = await Team.findById(req.params.id)
-    .populate({
-      path: "repository",
-      select: ["description", "startDate", "endDate", "title"],
-    })
-    .populate({
-      path: "members",
-      select: ["fullName", "email", "faculty", "accountType"],
-    });
+  const query = {
+    $id: { $eq: mongoose.Types.ObjectId(req.params.id) },
+  };
+  const team = await populateTeams(query);
 
-  if (!team) {
+  if (!team[0]) {
     res.status(404);
     throw new Error("Team not found");
   }
 
-  res.status(200).json(team);
+  res.status(200).json(team[0]);
 });
 
 // @desc Update Team
