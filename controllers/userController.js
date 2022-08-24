@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 import generateToken from "../utils/generateToken.js";
 import User from "../models/userModel.js";
-import { populateTeams } from "../utils/queries.js";
+import { populateTeamsByUser } from "../utils/queries.js";
 
 // @desc Auth user & get token
 // @route POST /api/users/login
@@ -169,14 +169,15 @@ const searchUser = asyncHandler(async (req, res) => {
 // @access Private/User
 const getTeamsByUserId = asyncHandler(async (req, res) => {
   const status = req.query.accepted ? { $eq: "accepted" } : { $ne: "accepted" };
+  const userId = mongoose.Types.ObjectId(req.params.id);
 
-  let query = { members: { $in: [mongoose.Types.ObjectId(req.params.id)] } };
+  let query = { members: { $in: [userId] } };
 
   if (!req.query.all) {
     query = { $and: [query, { status }] };
   }
 
-  const teams = await populateTeams(query);
+  const teams = await populateTeamsByUser(query, userId);
 
   res.status(200).json(teams);
 });

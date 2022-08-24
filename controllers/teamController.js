@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler";
 import mongoose from "mongoose";
 
-import { populateTeams } from "../utils/queries.js";
+import { populateTeams, populateTeamsByUser } from "../utils/queries.js";
 
 import Chat from "../models/chatModel.js";
 import Repository from "../models/repositoryModel.js";
@@ -68,10 +68,11 @@ const getTeams = asyncHandler(async (req, res) => {
 // @route GET /api/team/:id
 // @access Private/User
 const getTeamById = asyncHandler(async (req, res) => {
+  const userId = mongoose.Types.ObjectId(req.params.id);
   const query = {
-    $id: { $eq: mongoose.Types.ObjectId(req.params.id) },
+    $id: { $eq: userId },
   };
-  const team = await populateTeams(query);
+  const team = await populateTeamsByUser(query, userId);
 
   if (!team[0]) {
     res.status(404);
