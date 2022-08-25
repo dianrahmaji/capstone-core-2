@@ -8,7 +8,7 @@ export default function createSocketServer(app) {
   const io = new Server(app, {
     pingTimeout: 60000,
     cors: {
-      origin: "http://localhost:8000",
+      origin: "http://localhost:*",
     },
   });
 
