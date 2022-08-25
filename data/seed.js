@@ -1,9 +1,11 @@
+/* eslint-disable no-console */
 import dotenv from "dotenv";
 // eslint-disable-next-line no-unused-vars
 import colors from "colors";
 
 import connectDB from "../config/db.js";
 
+import Chat from "../models/chatModel.js";
 import Document from "../models/documentModel.js";
 import Folder from "../models/folderModel.js";
 import Message from "../models/messageModel.js";
@@ -17,16 +19,21 @@ dotenv.config();
 
 connectDB();
 
+function dataDestroyer() {
+  return Promise.all([
+    Chat.deleteMany({}),
+    Document.deleteMany({}),
+    Folder.deleteMany({}),
+    Message.deleteMany({}),
+    Repository.deleteMany({}),
+    Team.deleteMany({}),
+    User.deleteMany({}),
+  ]);
+}
+
 const destroyData = async () => {
   try {
-    await Promise.all([
-      Document.deleteMany({}),
-      Folder.deleteMany({}),
-      Message.deleteMany({}),
-      Repository.deleteMany({}),
-      Team.deleteMany({}),
-      User.deleteMany({}),
-    ]);
+    await dataDestroyer();
 
     console.log("Data Destroyed!".red);
     process.exit();
@@ -38,15 +45,7 @@ const destroyData = async () => {
 
 const seedData = async () => {
   try {
-    await Promise.all([
-      Document.deleteMany({}),
-      Folder.deleteMany({}),
-      Message.deleteMany({}),
-      Repository.deleteMany({}),
-      Team.deleteMany({}),
-      User.deleteMany({}),
-    ]);
-
+    await dataDestroyer();
     await User.create(users);
 
     console.log("Data Imported!".green);
