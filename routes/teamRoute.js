@@ -1,12 +1,13 @@
 import express from "express";
 import {
-  addMember,
-  createTeam,
-  approveTeam,
-  getTeamById,
   getTeams,
+  getTeamById,
+  createTeam,
   updateTeam,
   deleteTeam,
+  approveTeam,
+  addMember,
+  updateMember,
   deleteMember,
 } from "../controllers/teamController.js";
 import { admin, protect } from "../middlewares/authMiddleware.js";
@@ -21,7 +22,8 @@ router
   .delete(protect, deleteTeam);
 router
   .route("/:teamId/member/:memberId")
-  .put(protect, addMember)
+  .post(protect, addMember)
+  .put(protect, updateMember)
   .delete(protect, deleteMember);
 router.route("/:id/approve").put(protect, admin, approveTeam);
 

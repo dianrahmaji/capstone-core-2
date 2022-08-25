@@ -120,7 +120,7 @@ const updateTeam = asyncHandler(async (req, res) => {
 });
 
 // @desc Add Member to Team
-// @route PUT /api/team/:id/member
+// @route POST /api/team/:id/member
 // @access Private/User
 const addMember = asyncHandler(async (req, res) => {
   const { teamId, memberId } = req.params;
@@ -137,6 +137,36 @@ const addMember = asyncHandler(async (req, res) => {
       ...query,
       $push: {
         ...query.$push,
+        administrators: memberId,
+      },
+    };
+  }
+
+  const team = await Team.findByIdAndUpdate(teamId, query);
+
+  res.status(201).json(team);
+});
+
+// @desc Update Member from Team
+// @route PUT /api/team/:id/member
+// @access Private/User
+const updateMember = asyncHandler(async (req, res) => {
+  const { teamId, memberId } = req.params;
+  const { role } = req.query;
+
+  let query;
+
+  if (role === "administrator") {
+    query = {
+      $addToSet: {
+        administrators: memberId,
+      },
+    };
+  }
+
+  if (role === "researcher") {
+    query = {
+      $pull: {
         administrators: memberId,
       },
     };
@@ -178,10 +208,11 @@ const deleteTeam = asyncHandler(async (req, res) => {
 export {
   createTeam,
   approveTeam,
-  getTeamById,
   getTeams,
+  getTeamById,
   updateTeam,
-  addMember,
-  deleteMember,
   deleteTeam,
+  addMember,
+  updateMember,
+  deleteMember,
 };
