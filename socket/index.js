@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { Server } from "socket.io";
+import minimist from "minimist";
 
 import Chat from "../models/chatModel.js";
 import Message from "../models/messageModel.js";
@@ -8,7 +9,13 @@ export default function createSocketServer(app) {
   const io = new Server(app, {
     pingTimeout: 60000,
     cors: {
-      origin: "http://localhost:*",
+      origin: [
+        "http://localhost:3000", // admin dev
+        "http://localhost:3030", // admin prod
+        "http://localhost:8000", // dashboard dev
+        "http://localhost:8080", // dashboard drod
+        minimist(process.argv.slice(2)).ngrok, // dashboard drod with ngrok (randomized). Change every run
+      ],
     },
   });
 
