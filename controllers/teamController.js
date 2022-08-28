@@ -12,28 +12,41 @@ import User from "../models/userModel.js";
 // @route POST /api/team
 // @access Private/User
 const createTeam = asyncHandler(async (req, res) => {
-  const { name, administrator, ...data } = req.body;
+  const { name, creator, description, title, startDate, endDate } = req.body;
 
-  const team = await Team.create({
+  let team = await Team.create({
     name,
-    administrators: [administrator],
-    members: [administrator],
+    description,
+    administrators: [creator],
+    members: [creator],
   });
 
-  const repository = await Repository.create(data);
+  const repository = await Repository.create({
+    title,
+    startDate,
+    endDate,
+  });
+
   const chat = await Chat.create({});
 
   team.repository = repository;
   team.chat = chat;
   await team.save();
 
-  await User.findByIdAndUpdate(administrator, {
+  await User.findByIdAndUpdate(creator, {
     $push: {
       teams: team._id,
     },
   });
 
-  res.status(201).json(repository);
+  const query = {
+    _id: { $eq: team._id },
+  };
+
+  team = await populateTeamsByUser(query, creator);
+
+  // TODO: use $unwind instead
+  res.status(201).json(team[0]);
 });
 
 /**
@@ -67,10 +80,11 @@ const getTeams = asyncHandler(async (req, res) => {
 // @desc Get Team by Id
 // @route GET /api/team/:id
 // @access Private/User
+// FIXME: Problems with the query
 const getTeamById = asyncHandler(async (req, res) => {
   const userId = mongoose.Types.ObjectId(req.params.id);
   const query = {
-    $id: { $eq: userId },
+    _id: { $eq: userId },
   };
   const team = await populateTeamsByUser(query, userId);
 

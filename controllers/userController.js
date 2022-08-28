@@ -29,6 +29,7 @@ const authUser = asyncHandler(async (req, res) => {
       userId: user.userId,
       isAdmin: user.isAdmin,
       isApproved: user.isApproved,
+      specialities: user.specialities,
       token: generateToken(user._id),
     });
   } else {
@@ -63,6 +64,7 @@ const registerUser = asyncHandler(async (req, res) => {
       userId: user.userId,
       isAdmin: user.isAdmin,
       isApproved: user.isApproved,
+      specialities: user.specialities,
       token: generateToken(user._id),
     });
   } else {
