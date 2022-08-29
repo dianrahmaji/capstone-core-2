@@ -12,11 +12,13 @@ import User from "../models/userModel.js";
 // @route POST /api/team
 // @access Private/User
 const createTeam = asyncHandler(async (req, res) => {
-  const { name, creator, description, title, startDate, endDate } = req.body;
+  const { name, creator, description, topics, title, startDate, endDate } =
+    req.body;
 
   let team = await Team.create({
     name,
     description,
+    topics,
     administrators: [creator],
     members: [creator],
   });
@@ -102,7 +104,7 @@ const getTeamById = asyncHandler(async (req, res) => {
 const updateTeam = asyncHandler(async (req, res) => {
   const team = await Team.findById(req.params.id);
   const repository = await Repository.findById(team.repository);
-  const { name, title, description, startDate, endDate } = req.body;
+  const { name, title, description, startDate, endDate, topics } = req.body;
 
   if (!team) {
     res.status(404);
@@ -110,12 +112,13 @@ const updateTeam = asyncHandler(async (req, res) => {
   }
 
   team.name = name;
+  team.description = description;
+  team.topics = topics;
   if (team.status === "rejected") {
     team.status = "updated";
   }
 
   repository.title = title;
-  repository.description = description;
   repository.startDate = startDate;
   repository.endDate = endDate;
 
@@ -127,7 +130,8 @@ const updateTeam = asyncHandler(async (req, res) => {
   res.status(204).json({
     name: updatedTeam.name,
     status: updatedTeam.status,
-    description: updatedRepository.description,
+    description: updatedTeam.description,
+    topics: updatedTeam.topics,
     startDate: updatedRepository.startDate,
     endDate: updatedRepository.endDate,
   });
