@@ -6,31 +6,32 @@ import Folder from "../models/folderModel.js";
 // @route POST /api/folder
 // @access Private/User
 const createFolder = asyncHandler(async (req, res) => {
-  const { parentId, title, note, authorId } = req.body;
+  const { authorId, description, name, parentId } = req.body;
+
+  const note = `<h1>${name}</h1><p>Click the edit note button!</p>`;
 
   const folder = await Folder.create({
-    title: title ?? "root",
+    name,
     note,
-    author: authorId,
+    description,
+    authors: authorId,
   });
 
   folder.save();
 
-  if (parentId) {
-    Folder.findByIdAndUpdate(parentId, {
-      $push: {
-        folders: folder._id,
-      },
-    });
-  }
+  await Folder.findByIdAndUpdate(parentId, {
+    $push: {
+      folders: folder._id,
+    },
+  });
 
   res.status(201).json(folder);
 });
 
 /**
  * @desc Get Current Folder By Id
- *  @route GET /api/folder/:id
- *  @access Private/User
+ * @route GET /api/folder/:id
+ * @access Private/User
  */
 const getFolderById = asyncHandler(async (req, res) => {
   const folder = await Folder.findById(req.params.id)
