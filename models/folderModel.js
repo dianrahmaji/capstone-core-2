@@ -2,8 +2,15 @@ import mongoose from "mongoose";
 
 const folderSchema = mongoose.Schema(
   {
-    title: { type: String, required: true },
+    name: { type: String, required: true }, // TODO: rename to name
     note: { type: String, required: true },
+    description: { type: String },
+    status: {
+      type: String,
+      required: true,
+      enum: ["ongoing", "draft", "done", "critical"],
+      default: "ongoing",
+    },
     documents: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -11,15 +18,21 @@ const folderSchema = mongoose.Schema(
       },
     ],
     authors: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    folders: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Folder",
+      },
+    ],
   },
   {
     timestamps: true,
   },
 );
 
-folderSchema.add({
-  folders: [folderSchema],
-});
+// folderSchema.add({
+//   folders: [folderSchema],
+// });
 
 const Folder = mongoose.model("Folder", folderSchema);
 

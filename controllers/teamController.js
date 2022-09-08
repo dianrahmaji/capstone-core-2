@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 import { populateTeams, populateTeamsByUser } from "../utils/queries.js";
 
 import Chat from "../models/chatModel.js";
+import Document from "../models/documentModel.js";
+import Folder from "../models/folderModel.js";
 import Repository from "../models/repositoryModel.js";
 import Team from "../models/teamModel.js";
 import User from "../models/userModel.js";
@@ -15,25 +17,50 @@ const createTeam = asyncHandler(async (req, res) => {
   const { name, creator, description, topics, title, startDate, endDate } =
     req.body;
 
-  let team = await Team.create({
-    name,
-    description,
-    topics,
-    administrators: [creator],
-    members: [creator],
+  const sampleFolder = await Folder.create({
+    name: "Sample Folder",
+    note: "<h1>Details Here...</h1><p>Click the edit note button!</p>",
+    description: "This is a sample folder",
+    authors: [creator],
+  });
+
+  const sampleDocument = await Document.create({
+    name: "Sample File",
+    description: "This is a sample document",
+    type: "docx",
+    size: 1048576,
+    link: "https://firebasestorage.googleapis.com/v0/b/knowledge-management-capstone.appspot.com/o/sample%2FDokumen%20C251_46336%20v.0.0.docx?alt=media&token=bdc62d8e-cf01-4b08-8cac-85bf4d6b10d9",
+    craftingTime: 3,
+    authors: [creator],
+  });
+
+  const root = await Folder.create({
+    name: title,
+    note: `<h1>${title}</h1><p>Click the edit note button!</p>`,
+    description: "This is the root folder",
+    documents: [sampleDocument],
+    folders: [sampleFolder],
+    authors: [creator],
   });
 
   const repository = await Repository.create({
     title,
     startDate,
     endDate,
+    root,
   });
 
   const chat = await Chat.create({});
 
-  team.repository = repository;
-  team.chat = chat;
-  await team.save();
+  let team = await Team.create({
+    name,
+    description,
+    topics,
+    administrators: [creator],
+    members: [creator],
+    repository,
+    chat,
+  });
 
   await User.findByIdAndUpdate(creator, {
     $push: {

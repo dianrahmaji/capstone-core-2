@@ -5,12 +5,10 @@ const repositorySchema = mongoose.Schema(
     title: { type: String, required: true },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
-    folders: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Folder",
-      },
-    ],
+    root: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Folder",
+    },
   },
   { timestamps: true },
 );
