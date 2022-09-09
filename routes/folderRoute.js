@@ -4,6 +4,7 @@ import {
   deleteFolder,
   getFolderById,
   updateFolder,
+  updateFolderNote,
 } from "../controllers/folderController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 
@@ -15,5 +16,6 @@ router
   .get(protect, getFolderById)
   .put(protect, updateFolder)
   .delete(protect, deleteFolder);
+router.route("/:id/note").put(protect, updateFolderNote);
 
 export default router;
