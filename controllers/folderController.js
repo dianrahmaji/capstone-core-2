@@ -10,19 +10,22 @@ const createFolder = asyncHandler(async (req, res) => {
 
   const note = `<h1>${name}</h1><p>Click the edit note button!</p>`;
 
-  const folder = await Folder.create({
+  let folder = await Folder.create({
     name,
     note,
     description,
     authors: authorId,
   });
 
-  folder.save();
-
   await Folder.findByIdAndUpdate(parentId, {
     $push: {
       folders: folder._id,
     },
+  });
+
+  folder = await folder.populate({
+    path: "authors",
+    select: ["email", "fullName"],
   });
 
   res.status(201).json(folder);
@@ -67,9 +70,10 @@ const updateFolder = asyncHandler(async (req, res) => {
     throw new Error("Folder not found");
   }
 
-  const { title, description } = req.body;
+  const { name, status, description } = req.body;
 
-  folder.title = title;
+  folder.name = name;
+  folder.status = status;
   folder.description = description;
 
   const updatedFolder = await folder.save();
