@@ -102,25 +102,23 @@ const updateFolderNote = asyncHandler(async (req, res) => {
   res.status(201).send(folder);
 });
 
-// @desc Delete Folder by Id
-// @route DELETE /api/folder/:id
-// @access Private/User
+/**
+ * @desc Delete Folder by Id
+ * @route DELETE /api/folder/:id
+ * @access Private/User
+ */
 const deleteFolder = asyncHandler(async (req, res) => {
   const folder = await Folder.findById(req.params.id)
     .populate("folders", "_id")
     .populate("documents", "_id")
     .exec();
 
-  Document.deleteMany({
-    _id: {
-      $in: folder.documents.map((d) => d._id),
-    },
+  await Document.deleteMany({
+    _id: folder.documents,
   });
 
-  Folder.deleteMany({
-    _id: {
-      $in: [req.params.id, ...folder.folders.map((f) => f._id)],
-    },
+  await Folder.deleteMany({
+    _id: [req.params.id, ...folder.folders],
   });
 
   res.status(204).json({ message: "Folder deleted successfully" });
