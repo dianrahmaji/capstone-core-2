@@ -21,17 +21,20 @@ const createTeam = asyncHandler(async (req, res) => {
     name: "Sample Folder",
     note: "<h1>Details Here...</h1><p>Click the edit note button!</p>",
     description: "This is a sample folder",
+    status: "ongoing",
     authors: [creator],
   });
 
   const sampleDocument = await Document.create({
-    name: "Sample File",
+    name: "sample file.txt",
     description: "This is a sample document",
-    type: "docx",
-    size: 1048576,
-    link: "https://firebasestorage.googleapis.com/v0/b/knowledge-management-capstone.appspot.com/o/sample%2FDokumen%20C251_46336%20v.0.0.docx?alt=media&token=bdc62d8e-cf01-4b08-8cac-85bf4d6b10d9",
-    craftingTime: 3,
+    extension: "txt",
+    size: 11,
+    url: "https://firebasestorage.googleapis.com/v0/b/knowledge-management-capstone.appspot.com/o/sample%2F1663082103633_sample%20file.txt?alt=media&token=e3b3c154-9c36-45db-ad8f-d307674491fa",
+    storageDir: "/sample/1663082103633_sample file.txt",
+    craftingTime: 1,
     authors: [creator],
+    status: "done",
   });
 
   const root = await Folder.create({

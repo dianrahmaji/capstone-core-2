@@ -18,6 +18,10 @@ const documentSchema = mongoose.Schema(
       enum: ["ongoing", "draft", "done", "critical"],
       default: "ongoing",
     },
+    storageDir: {
+      type: String,
+      required: true,
+    },
     authors: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   {
