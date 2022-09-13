@@ -13,7 +13,7 @@ import Repository from "../models/repositoryModel.js";
 import Team from "../models/teamModel.js";
 import User from "../models/userModel.js";
 
-import users from "./user.json";
+import users from "./user.json" assert { type: "json" };
 
 dotenv.config();
 

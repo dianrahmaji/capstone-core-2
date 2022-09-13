@@ -4,13 +4,13 @@ const documentSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
     description: { type: String },
-    type: {
+    extension: {
       type: String,
       required: true,
-      enum: ["jpg", "pdf", "mp4", "docx", "xlsx"], // TODO: Add more types later
+      enum: ["jpg", "pdf", "mp4", "docx", "xlsx", "txt"], // TODO: Add more types later
     },
     size: { type: Number, required: true }, // in Bytes
-    link: { type: String, required: true },
+    url: { type: String, required: true },
     craftingTime: { type: Number, required: true },
     status: {
       type: String,

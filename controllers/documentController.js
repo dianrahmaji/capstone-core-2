@@ -6,24 +6,14 @@ import Folder from "../models/folderModel.js";
 // @route POST /api/document
 // @access Private/User
 const createDocument = asyncHandler(async (req, res) => {
-  const {
-    parentId,
-    title,
-    description,
-    type,
-    link = "http://example.com/",
-    authorId,
-  } = req.body;
+  const { folderId, authorId, ...rest } = req.body;
 
   const document = await Document.create({
-    title,
-    description,
-    type,
-    link,
-    author: authorId,
+    authors: [authorId],
+    ...rest,
   });
 
-  Folder.findByIdAndUpdate(parentId, {
+  await Folder.findByIdAndUpdate(folderId, {
     $push: {
       documents: document._id,
     },
