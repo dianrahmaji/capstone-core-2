@@ -7,7 +7,7 @@ const documentSchema = mongoose.Schema(
     extension: {
       type: String,
       required: true,
-      enum: ["jpg", "pdf", "mp4", "docx", "xlsx", "txt"], // TODO: Add more types later
+      enum: ["jpg", "jpeg", "pdf", "mp4", "docx", "xlsx", "txt"], // TODO: Add more types later
     },
     size: { type: Number, required: true }, // in Bytes
     url: { type: String, required: true },

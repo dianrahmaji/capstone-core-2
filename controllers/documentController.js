@@ -44,24 +44,16 @@ const deleteDocument = asyncHandler(async (req, res) => {
 // @route PUT /api/document/:id
 // @access Private/User
 const updateDocument = asyncHandler(async (req, res) => {
-  const document = await Document.findById(req.params.id);
+  const payload = req.body;
 
-  // if (!folder) {
-  //   res.status(404);
-  //   throw new Error("Document not found");
-  // }
+  const document = await Document.findByIdAndUpdate(req.params.id, payload, {
+    new: true,
+  }).populate({
+    path: "authors",
+    select: ["fullName", "email"],
+  });
 
-  const { title, description, type, link } = req.body;
-
-  document.title = title;
-  document.description = description;
-  document.type = type;
-  document.link = link;
-
-  // TODO: Update/Add authors
-
-  const updatedDocument = await document.save();
-  res.status(200).json(updatedDocument);
+  res.status(200).json(document);
 });
 
 export { createDocument, getDocumentById, deleteDocument, updateDocument };

@@ -26,7 +26,7 @@ const createTeam = asyncHandler(async (req, res) => {
   });
 
   const sampleDocument = await Document.create({
-    name: "sample file.txt",
+    name: "sample file",
     description: "This is a sample document",
     extension: "txt",
     size: 11,
