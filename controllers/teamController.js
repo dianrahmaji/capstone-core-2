@@ -17,43 +17,50 @@ const createTeam = asyncHandler(async (req, res) => {
   const { name, creator, description, topics, title, startDate, endDate } =
     req.body;
 
-  const sampleFolder = await Folder.create({
-    name: "Sample Folder",
-    note: "<h1>Details Here...</h1><p>Click the edit note button!</p>",
-    description: "This is a sample folder",
-    status: "ongoing",
-    authors: [creator],
-  });
-
-  const sampleDocument = await Document.create({
-    name: "sample file",
-    description: "This is a sample document",
-    extension: "txt",
-    size: 11,
-    url: "https://firebasestorage.googleapis.com/v0/b/knowledge-management-capstone.appspot.com/o/sample%2F1663082103633_sample%20file.txt?alt=media&token=e3b3c154-9c36-45db-ad8f-d307674491fa",
-    storageDir: "/sample/1663082103633_sample file.txt",
-    craftingTime: 1,
-    authors: [creator],
-    status: "done",
-  });
-
   const root = await Folder.create({
     name: title,
     note: `<h1>${title}</h1><p>Click the edit note button!</p>`,
     description: "This is the root folder",
-    documents: [sampleDocument],
-    folders: [sampleFolder],
     authors: [creator],
   });
 
-  const repository = await Repository.create({
-    title,
-    startDate,
-    endDate,
-    root,
-  });
+  const [sampleFolder, sampleDocument] = await Promise.all([
+    Folder.create({
+      name: "Sample Folder",
+      note: "<h1>Details Here...</h1><p>Click the edit note button!</p>",
+      description: "This is a sample folder",
+      status: "ongoing",
+      authors: [creator],
+      parent: root,
+    }),
+    Document.create({
+      name: "sample file",
+      description: "This is a sample document",
+      extension: "txt",
+      size: 11,
+      url: "https://firebasestorage.googleapis.com/v0/b/knowledge-management-capstone.appspot.com/o/sample%2F1663082103633_sample%20file.txt?alt=media&token=e3b3c154-9c36-45db-ad8f-d307674491fa",
+      storageDir: "/sample/1663082103633_sample file.txt",
+      craftingTime: 1,
+      authors: [creator],
+      status: "done",
+    }),
+  ]);
 
-  const chat = await Chat.create({});
+  root.folders = [sampleFolder];
+  root.documents = [sampleDocument];
+
+  await root.save();
+
+  const [, repository, chat] = await Promise.all([
+    root.save(),
+    Repository.create({
+      title,
+      startDate,
+      endDate,
+      root,
+    }),
+    Chat.create({}),
+  ]);
 
   let team = await Team.create({
     name,
