@@ -20,15 +20,16 @@ export default function createSocketServer(app) {
   });
 
   io.on("connection", (socket) => {
+    socket.removeAllListeners();
     console.log("Connected to socket.io");
 
     socket.on("join_room", (roomId) => {
       socket.join(roomId);
-      console.log("User joins", roomId);
       socket.emit("joined_room");
     });
 
     socket.on("send_message", async (roomId, { text, sender }) => {
+      console.log(text);
       const message = await Message.create({ text, sender });
       await Chat.findByIdAndUpdate(roomId, {
         $push: {
@@ -37,7 +38,11 @@ export default function createSocketServer(app) {
         },
       });
 
-      socket.broadcast.to(roomId).emit("receive_message", message);
+      console.log("members in", roomId);
+      io.in(roomId)
+        .allSockets()
+        .then((members) => console.log(members));
+      socket.to(roomId).emit("receive_message", message);
     });
 
     socket.on("disconnect", () => {
