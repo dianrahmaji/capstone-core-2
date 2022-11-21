@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { populateTeams, populateTeamsByUser } from "../utils/queries.js";
 
 import Chat from "../models/chatModel.js";
+import Contribution from "../models/contributionModel.js";
 import Document from "../models/documentModel.js";
 import Folder from "../models/folderModel.js";
 import Repository from "../models/repositoryModel.js";
@@ -51,7 +52,7 @@ const createTeam = asyncHandler(async (req, res) => {
 
   await root.save();
 
-  const [, repository, chat] = await Promise.all([
+  const [, repository, chat, contribution] = await Promise.all([
     root.save(),
     Repository.create({
       title,
@@ -60,17 +61,29 @@ const createTeam = asyncHandler(async (req, res) => {
       root,
     }),
     Chat.create({}),
+    Contribution.create({
+      author: creator,
+      sampleDocument,
+      contribution: 0,
+    }),
   ]);
 
-  let team = await Team.create({
-    name,
-    description,
-    topics,
-    administrators: [creator],
-    members: [creator],
-    repository,
-    chat,
-  });
+  contribution.repository = repository;
+  sampleDocument.contributions = [contribution];
+
+  let [team] = await Promise.all([
+    Team.create({
+      name,
+      description,
+      topics,
+      administrators: [creator],
+      members: [creator],
+      repository,
+      chat,
+    }),
+    sampleDocument.save(),
+    contribution.save(),
+  ]);
 
   await User.findByIdAndUpdate(creator, {
     $push: {

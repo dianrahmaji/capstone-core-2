@@ -1,4 +1,5 @@
 import asyncHandler from "express-async-handler";
+import Contribution from "../models/contributionModel.js";
 import Document from "../models/documentModel.js";
 import Folder from "../models/folderModel.js";
 
@@ -6,18 +7,31 @@ import Folder from "../models/folderModel.js";
 // @route POST /api/document
 // @access Private/User
 const createDocument = asyncHandler(async (req, res) => {
-  const { folderId, authorId, ...rest } = req.body;
+  const { folderId, authorId, repositoryId, ...rest } = req.body;
 
-  const document = await Document.create({
-    authors: [authorId],
-    ...rest,
-  });
+  const [document, contribution] = await Promise.all([
+    Document.create({
+      authors: [authorId],
+      ...rest,
+    }),
+    Contribution.create({
+      author: authorId,
+      repository: repositoryId,
+    }),
+  ]);
 
-  await Folder.findByIdAndUpdate(folderId, {
-    $push: {
-      documents: document._id,
-    },
-  });
+  document.contributions = [contribution];
+  contribution.document = document;
+
+  await Promise.all([
+    Folder.findByIdAndUpdate(folderId, {
+      $push: {
+        documents: document._id,
+      },
+    }),
+    document.save(),
+    contribution.save(),
+  ]);
 
   res.status(201).json(document);
 });

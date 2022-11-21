@@ -6,6 +6,7 @@ import colors from "colors";
 import connectDB from "../config/db.js";
 
 import Chat from "../models/chatModel.js";
+import Contribution from "../models/contributionModel.js";
 import Document from "../models/documentModel.js";
 import Folder from "../models/folderModel.js";
 import Message from "../models/messageModel.js";
@@ -22,6 +23,7 @@ connectDB();
 function dataDestroyer() {
   return Promise.all([
     Chat.deleteMany({}),
+    Contribution.deleteMany({}),
     Document.deleteMany({}),
     Folder.deleteMany({}),
     Message.deleteMany({}),
