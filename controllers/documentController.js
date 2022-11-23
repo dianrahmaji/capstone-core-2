@@ -7,33 +7,52 @@ import Folder from "../models/folderModel.js";
 // @route POST /api/document
 // @access Private/User
 const createDocument = asyncHandler(async (req, res) => {
-  const { folderId, authorId, repositoryId, ...rest } = req.body;
+  const {
+    folderId,
+    repositoryId,
+    contributions: contributionsRequestBody,
+    ...rest
+  } = req.body;
 
-  const [document, contribution] = await Promise.all([
+  const [document, ...contributions] = await Promise.all([
     Document.create({
-      authors: [authorId],
+      authors: contributionsRequestBody.map(({ author }) => author),
       ...rest,
     }),
-    Contribution.create({
-      author: authorId,
-      repository: repositoryId,
-    }),
+    ...contributionsRequestBody.map((contribution) =>
+      Contribution.create({
+        ...contribution,
+        repository: repositoryId,
+      }),
+    ),
   ]);
 
-  document.contributions = [contribution];
-  contribution.document = document;
+  document.contributions = contributions.map((c) => c._id);
+  contributions.forEach((c) => {
+    // eslint-disable-next-line no-param-reassign
+    c.document = document;
+  });
 
-  await Promise.all([
+  const [updatedDocument] = await Promise.all([
+    document.save(),
     Folder.findByIdAndUpdate(folderId, {
       $push: {
         documents: document._id,
       },
     }),
-    document.save(),
-    contribution.save(),
+    ...contributions.map((c) => c.save()),
   ]);
 
-  res.status(201).json(document);
+  const response = await updatedDocument.populate({
+    path: "contributions",
+    select: ["_id", "contribution"],
+    populate: {
+      path: "author",
+      select: ["_id", "fullName", "email"],
+    },
+  });
+
+  res.status(201).json(response);
 });
 
 // @desc Get Document by Id

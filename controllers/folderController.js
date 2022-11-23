@@ -111,6 +111,12 @@ const getFolderById = asyncHandler(async (req, res) => {
                     as: "author",
                   },
                 },
+                {
+                  $unwind: {
+                    path: "$author",
+                    preserveNullAndEmptyArrays: true,
+                  },
+                },
               ],
               as: "contributions",
             },
