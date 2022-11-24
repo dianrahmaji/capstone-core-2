@@ -77,13 +77,34 @@ const deleteDocument = asyncHandler(async (req, res) => {
 // @route PUT /api/document/:id
 // @access Private/User
 const updateDocument = asyncHandler(async (req, res) => {
-  const payload = req.body;
+  const { contributions, ...payload } = req.body;
+  const documentId = req.params.id;
 
-  const document = await Document.findByIdAndUpdate(req.params.id, payload, {
-    new: true,
-  }).populate({
-    path: "authors",
-    select: ["fullName", "email"],
+  const updatedContributions = (
+    await Promise.all(
+      contributions.map(({ author, contribution }) =>
+        Contribution.findOneAndUpdate(
+          { author, document: documentId },
+          { contribution },
+          { new: true, upsert: true },
+        ),
+      ),
+    )
+  ).map((c) => c._id);
+
+  const document = await Document.findByIdAndUpdate(
+    documentId,
+    { ...payload, contributions: updatedContributions },
+    {
+      new: true,
+    },
+  ).populate({
+    path: "contributions",
+    select: ["_id", "contribution"],
+    populate: {
+      path: "author",
+      select: ["_id", "fullName", "email"],
+    },
   });
 
   res.status(200).json(document);
