@@ -169,6 +169,52 @@ const aggregationsSorted = (query) => [
     },
   },
   {
+    $addFields: {
+      members: {
+        $map: {
+          input: "$members",
+          as: "member",
+          in: {
+            $mergeObjects: [
+              "$$member",
+              {
+                contributions: {
+                  $filter: {
+                    input: "$$member.contributions",
+                    as: "contribution",
+                    cond: {
+                      $eq: ["$repository._id", "$$contribution.repository"],
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+  {
+    $addFields: {
+      members: {
+        $map: {
+          input: "$members",
+          as: "member",
+          in: {
+            $mergeObjects: [
+              "$$member",
+              {
+                contributions: {
+                  $sum: "$$member.contributions.contribution",
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+  {
     $project: {
       _id: 1,
       chat: 1,
@@ -185,6 +231,7 @@ const aggregationsSorted = (query) => [
       "members.faculty": 1,
       "members.accountType": 1,
       "members.isAdmin": 1,
+      "members.contributions": 1,
     },
   },
   { $sort: { score: { $meta: "textScore" } } },

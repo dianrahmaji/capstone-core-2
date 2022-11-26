@@ -45,7 +45,6 @@ const createTeam = asyncHandler(async (req, res) => {
       size: 11,
       url: "https://firebasestorage.googleapis.com/v0/b/knowledge-management-capstone.appspot.com/o/sample%2F1663082103633_sample%20file.txt?alt=media&token=e3b3c154-9c36-45db-ad8f-d307674491fa",
       storageDir: "/sample/1663082103633_sample file.txt",
-      craftingTime: 1,
       authors: [creator],
       status: "done",
     }),
@@ -155,6 +154,7 @@ const getTeamById = asyncHandler(async (req, res) => {
 // @desc Update Team
 // @route PUT /api/team/:id
 // @access Private/User
+// FIXME: Not returning responses
 const updateTeam = asyncHandler(async (req, res) => {
   const team = await Team.findById(req.params.id);
   const repository = await Repository.findById(team.repository);

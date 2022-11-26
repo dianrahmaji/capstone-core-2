@@ -159,7 +159,6 @@ const getFolderById = asyncHandler(async (req, res) => {
         "documents.size": 1,
         "documents.status": 1,
         "documents.url": 1,
-        "documents.craftingTime": 1,
         "documents.storageDir": 1,
         "documents.createdAt": 1,
         "documents.updatedAt": 1,
