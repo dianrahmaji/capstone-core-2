@@ -40,6 +40,8 @@ const teamSchema = mongoose.Schema(
   { timestamps: true },
 );
 
+teamSchema.index({ name: "text", description: "text" });
+
 const Team = mongoose.model("Team", teamSchema);
 
 export default Team;

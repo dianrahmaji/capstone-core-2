@@ -1,7 +1,11 @@
 import asyncHandler from "express-async-handler";
 import mongoose from "mongoose";
 
-import { populateTeams, populateTeamsByUser } from "../utils/queries.js";
+import {
+  populateTeams,
+  populateTeamsByUser,
+  populateTeamsSorted,
+} from "../utils/queries.js";
 
 import Chat from "../models/chatModel.js";
 import Contribution from "../models/contributionModel.js";
@@ -273,6 +277,20 @@ const deleteTeam = asyncHandler(async (req, res) => {
   res.status(204).json({ message: "team deleted successfully" });
 });
 
+// @desc Get Team by Id
+// @route GET /api/team/:id
+// @access Private/User
+// FIXME: Problems with the query
+const getTeamByString = asyncHandler(async (req, res) => {
+  const { searchText } = req.query;
+  const query = {
+    $text: { $search: searchText },
+  };
+  const team = await populateTeamsSorted(query);
+
+  res.status(200).json(team);
+});
+
 export {
   createTeam,
   approveTeam,
@@ -283,4 +301,5 @@ export {
   addMember,
   updateMember,
   deleteMember,
+  getTeamByString,
 };

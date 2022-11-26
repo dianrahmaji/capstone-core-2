@@ -36,6 +36,8 @@ const documentSchema = mongoose.Schema(
   },
 );
 
+documentSchema.index({ name: "text", description: "text" });
+
 const Document = mongoose.model("Document", documentSchema);
 
 export default Document;

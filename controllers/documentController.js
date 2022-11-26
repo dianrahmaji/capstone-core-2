@@ -110,4 +110,24 @@ const updateDocument = asyncHandler(async (req, res) => {
   res.status(200).json(document);
 });
 
-export { createDocument, getDocumentById, deleteDocument, updateDocument };
+// @desc Get Document by String
+// @route GET /api/document/:id
+// @access Public
+const getDocumentByString = asyncHandler(async (req, res) => {
+  const { searchText } = req.query;
+
+  const documents = await Document.find(
+    { $text: { $search: searchText } },
+    { score: { $meta: "textScore" } },
+  ).sort({ score: { $meta: "textScore" } });
+
+  res.status(200).json(documents);
+});
+
+export {
+  createDocument,
+  getDocumentById,
+  deleteDocument,
+  updateDocument,
+  getDocumentByString,
+};
