@@ -14,7 +14,9 @@ export default function createSocketServer(app) {
         "http://localhost:3030", // admin prod
         "http://localhost:8000", // dashboard dev
         "http://localhost:8080", // dashboard drod
-        minimist(process.argv.slice(2)).ngrok, // dashboard drod with ngrok (randomized). Change every run
+        minimist(process.argv.slice(2)).ngrok, // dashboard prod with ngrok (randomized). Change every run
+        "https://capstone-admin.vercel.app/", // admin vercel
+        "https://capstone-dashboard-beta.vercel.app/", // dashboard vercel
       ],
     },
   });
