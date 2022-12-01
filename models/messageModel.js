@@ -7,6 +7,7 @@ const messageSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    url: { type: String },
     type: {
       type: String,
       required: true,
