@@ -13,6 +13,8 @@ const repositorySchema = mongoose.Schema(
   { timestamps: true },
 );
 
+repositorySchema.index({ title: "text" });
+
 const Repository = mongoose.model("Repository", repositorySchema);
 
 export default Repository;

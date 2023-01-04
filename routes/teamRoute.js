@@ -9,14 +9,16 @@ import {
   addMember,
   updateMember,
   deleteMember,
-  getTeamByString,
+  getRepositoryByString,
+  getRepositoryById,
 } from "../controllers/teamController.js";
 import { admin, protect } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
 router.route("/").post(protect, createTeam).get(protect, admin, getTeams);
-router.route("/search").get(getTeamByString);
+router.route("/repository/").get(getRepositoryByString);
+router.route("/repository/:id").get(getRepositoryById);
 router
   .route("/:id")
   .get(protect, getTeamById)

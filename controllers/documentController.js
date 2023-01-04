@@ -114,6 +114,7 @@ const updateDocument = asyncHandler(async (req, res) => {
 // @route GET /api/document/:id
 // @access Public
 const getDocumentByString = asyncHandler(async (req, res) => {
+  await Document.createIndexes({ name: "text", description: "text" });
   const { searchText } = req.query;
 
   const documents = await Document.find(

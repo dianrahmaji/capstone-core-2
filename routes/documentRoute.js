@@ -12,6 +12,7 @@ const router = express.Router();
 
 router.route("/").post(protect, createDocument);
 router.route("/search").get(getDocumentByString);
+router.route("/search/:id").get(getDocumentById);
 router
   .route("/:id")
   .get(protect, getDocumentById)

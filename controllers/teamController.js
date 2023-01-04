@@ -291,6 +291,33 @@ const getTeamByString = asyncHandler(async (req, res) => {
   res.status(200).json(team);
 });
 
+const getRepositoryByString = asyncHandler(async (req, res) => {
+  const { searchText } = req.query;
+
+  const repositories = await Repository.aggregate([
+    { $match: { $text: { $search: searchText } } },
+    {
+      $lookup: {
+        from: "teams",
+        foreignField: "repository",
+        localField: "_id",
+        as: "team",
+      },
+    },
+    { $sort: { score: { $meta: "textScore" } } },
+  ]);
+
+  res.status(200).json(repositories);
+});
+
+const getRepositoryById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const repository = await Repository.findById(id);
+
+  res.status(200).json(repository);
+});
+
 export {
   createTeam,
   approveTeam,
@@ -302,4 +329,6 @@ export {
   updateMember,
   deleteMember,
   getTeamByString,
+  getRepositoryByString,
+  getRepositoryById,
 };
