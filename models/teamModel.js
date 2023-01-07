@@ -16,6 +16,8 @@ const teamSchema = mongoose.Schema(
       },
     ],
     description: { type: String, required: true },
+    document: { type: String, required: true },
+    review: { type: String, default: "" },
     repository: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Repository",

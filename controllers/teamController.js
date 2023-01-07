@@ -19,8 +19,16 @@ import User from "../models/userModel.js";
 // @route POST /api/team
 // @access Private/User
 const createTeam = asyncHandler(async (req, res) => {
-  const { name, creator, description, topics, title, startDate, endDate } =
-    req.body;
+  const {
+    name,
+    creator,
+    description,
+    topics,
+    title,
+    startDate,
+    endDate,
+    document,
+  } = req.body;
 
   const root = await Folder.create({
     name: title,
@@ -83,6 +91,7 @@ const createTeam = asyncHandler(async (req, res) => {
       members: [creator],
       repository,
       chat,
+      document: document.url,
     }),
     sampleDocument.save(),
     contribution.save(),

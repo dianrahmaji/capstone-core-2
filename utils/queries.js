@@ -245,6 +245,7 @@ export const populateTeams = async (query) => {
           $project: {
             ...aggregation.$project,
             administrators: 1,
+            document: 1,
           },
         }
       : aggregation,
