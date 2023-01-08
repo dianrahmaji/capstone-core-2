@@ -117,10 +117,41 @@ const getDocumentByString = asyncHandler(async (req, res) => {
   await Document.createIndexes({ name: "text", description: "text" });
   const { searchText } = req.query;
 
-  const documents = await Document.find(
-    { $text: { $search: searchText } },
-    { score: { $meta: "textScore" } },
-  ).sort({ score: { $meta: "textScore" } });
+  const documents = await Document.aggregate([
+    { $match: { $text: { $search: searchText } } },
+    { $sort: { score: { $meta: "textScore" } } },
+    {
+      $lookup: {
+        from: "folders",
+        foreignField: "documents",
+        localField: "_id",
+        as: "folders",
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        foreignField: "_id",
+        localField: "authors",
+        as: "authors",
+      },
+    },
+    {
+      $unwind: {
+        path: "$folders",
+      },
+    },
+    {
+      $graphLookup: {
+        from: "folders",
+        startWith: "$folders.parent",
+        connectFromField: "parent",
+        connectToField: "_id",
+        as: "folders.parent",
+        depthField: "level",
+      },
+    },
+  ]);
 
   res.status(200).json(documents);
 });
