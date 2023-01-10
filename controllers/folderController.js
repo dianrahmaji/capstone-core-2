@@ -140,6 +140,49 @@ const getFolderById = asyncHandler(async (req, res) => {
               as: "contributions",
             },
           },
+          {
+            $lookup: {
+              from: "documents",
+              let: { references: "$references" },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $in: ["$_id", "$$references"],
+                    },
+                  },
+                },
+                {
+                  $lookup: {
+                    from: "folders",
+                    let: { id: "$_id" },
+                    pipeline: [
+                      {
+                        $match: {
+                          $expr: {
+                            $in: ["$$id", "$documents"],
+                          },
+                        },
+                      },
+                      {
+                        $graphLookup: {
+                          from: "folders",
+                          startWith: "$parent",
+                          connectFromField: "parent",
+                          connectToField: "_id",
+                          depthField: "level",
+                          as: "parent",
+                        },
+                      },
+                    ],
+                    as: "folders",
+                  },
+                },
+                { $unwind: "$folders" },
+              ],
+              as: "references",
+            },
+          },
         ],
         as: "documents",
       },
@@ -196,6 +239,13 @@ const getFolderById = asyncHandler(async (req, res) => {
         "documents.contributions.author.email": 1,
         "documents.contributions.author.fullName": 1,
         "documents.contributions.contribution": 1,
+        "documents.references._id": 1,
+        "documents.references.name": 1,
+        "documents.references.extension": 1,
+        "documents.references.url": 1,
+        "documents.references.folders.name": 1,
+        "documents.references.folders.parent.name": 1,
+        "documents.references.folders.parent.level": 1,
       },
     },
   ]);

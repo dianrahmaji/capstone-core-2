@@ -28,6 +28,12 @@ const documentSchema = mongoose.Schema(
         ref: "Contribution",
       },
     ],
+    references: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Document",
+      },
+    ],
   },
   {
     timestamps: true,
