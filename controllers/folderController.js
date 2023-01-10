@@ -61,6 +61,15 @@ const getFolderById = asyncHandler(async (req, res) => {
         as: "authors",
       },
     },
+    /** Repository */
+    {
+      $lookup: {
+        from: "repositories",
+        foreignField: "root",
+        localField: "_id",
+        as: "repositories",
+      },
+    },
     /** Folders */
     {
       $lookup: {
@@ -143,6 +152,9 @@ const getFolderById = asyncHandler(async (req, res) => {
         status: 1,
         createdAt: 1,
         updatedAt: 1,
+
+        "repositories._id": 1,
+        "repositories.title": 1,
 
         "parents._id": 1,
         "parents.name": 1,
