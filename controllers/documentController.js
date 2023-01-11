@@ -43,16 +43,80 @@ const createDocument = asyncHandler(async (req, res) => {
     ...contributions.map((c) => c.save()),
   ]);
 
-  const response = await updatedDocument.populate({
-    path: "contributions",
-    select: ["_id", "contribution"],
-    populate: {
-      path: "author",
-      select: ["_id", "fullName", "email"],
+  const response = await Document.aggregate([
+    {
+      $match: { _id: updatedDocument._id },
     },
-  });
+    {
+      $lookup: {
+        from: "contributions",
+        let: { contributions: "$contributions" },
+        pipeline: [
+          { $match: { $expr: { $in: ["$_id", "$$contributions"] } } },
+          {
+            $lookup: {
+              from: "users",
+              let: { author: "$author" },
+              pipeline: [{ $match: { $expr: { $eq: ["$_id", "$$author"] } } }],
+              as: "author",
+            },
+          },
+          {
+            $unwind: {
+              path: "$author",
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+        ],
+        as: "contributions",
+      },
+    },
+    {
+      $lookup: {
+        from: "documents",
+        let: { references: "$references" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $in: ["$_id", "$$references"],
+              },
+            },
+          },
+          {
+            $lookup: {
+              from: "folders",
+              let: { id: "$_id" },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $in: ["$$id", "$documents"],
+                    },
+                  },
+                },
+                {
+                  $graphLookup: {
+                    from: "folders",
+                    startWith: "$parent",
+                    connectFromField: "parent",
+                    connectToField: "_id",
+                    depthField: "level",
+                    as: "parent",
+                  },
+                },
+              ],
+              as: "folders",
+            },
+          },
+          { $unwind: "$folders" },
+        ],
+        as: "references",
+      },
+    },
+  ]);
 
-  res.status(201).json(response);
+  res.status(201).json(response[0]);
 });
 
 // @desc Get Document by Id
@@ -98,16 +162,82 @@ const updateDocument = asyncHandler(async (req, res) => {
     {
       new: true,
     },
-  ).populate({
-    path: "contributions",
-    select: ["_id", "contribution"],
-    populate: {
-      path: "author",
-      select: ["_id", "fullName", "email"],
-    },
-  });
+  );
 
-  res.status(200).json(document);
+  const response = await Document.aggregate([
+    {
+      $match: { _id: document._id },
+    },
+    {
+      $lookup: {
+        from: "contributions",
+        let: { contributions: "$contributions" },
+        pipeline: [
+          { $match: { $expr: { $in: ["$_id", "$$contributions"] } } },
+          {
+            $lookup: {
+              from: "users",
+              let: { author: "$author" },
+              pipeline: [{ $match: { $expr: { $eq: ["$_id", "$$author"] } } }],
+              as: "author",
+            },
+          },
+          {
+            $unwind: {
+              path: "$author",
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+        ],
+        as: "contributions",
+      },
+    },
+    {
+      $lookup: {
+        from: "documents",
+        let: { references: "$references" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $in: ["$_id", "$$references"],
+              },
+            },
+          },
+          {
+            $lookup: {
+              from: "folders",
+              let: { id: "$_id" },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $in: ["$$id", "$documents"],
+                    },
+                  },
+                },
+                {
+                  $graphLookup: {
+                    from: "folders",
+                    startWith: "$parent",
+                    connectFromField: "parent",
+                    connectToField: "_id",
+                    depthField: "level",
+                    as: "parent",
+                  },
+                },
+              ],
+              as: "folders",
+            },
+          },
+          { $unwind: "$folders" },
+        ],
+        as: "references",
+      },
+    },
+  ]);
+
+  res.status(200).json(response[0]);
 });
 
 // @desc Get Document by String
