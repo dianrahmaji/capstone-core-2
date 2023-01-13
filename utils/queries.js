@@ -120,6 +120,7 @@ const aggregations = (query) => [
       repository: 1,
       description: 1,
       contributions: 1,
+      review: 1,
       "members._id": 1,
       "members.email": 1,
       "members.fullName": 1,
@@ -339,6 +340,8 @@ export const populateTeamsByUser = async (query, userId) => {
               ...aggregation.$project,
               isAdmin: 1,
               contributions: 1,
+              document: 1,
+              review: 1,
             },
           }
         : aggregation,

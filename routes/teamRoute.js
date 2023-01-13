@@ -11,6 +11,7 @@ import {
   deleteMember,
   getRepositoryByString,
   getRepositoryById,
+  respondTeam,
 } from "../controllers/teamController.js";
 import { admin, protect } from "../middlewares/authMiddleware.js";
 
@@ -30,5 +31,6 @@ router
   .put(protect, updateMember)
   .delete(protect, deleteMember);
 router.route("/:id/approve").put(protect, admin, approveTeam);
+router.route("/:id/respond").put(protect, admin, respondTeam);
 
 export default router;
