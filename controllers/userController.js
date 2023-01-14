@@ -15,8 +15,8 @@ const authUser = asyncHandler(async (req, res) => {
 
   if (user && (await user.matchPassword(password))) {
     if (!user.isApproved) {
-      res.status(403);
-      throw new Error("User not activated");
+      res.status(403).json({ message: "Akun Belum Aktif, Hubungi Admin" });
+      throw new Error("Akun Belum Aktif");
     }
 
     res.json({
@@ -55,17 +55,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (user) {
     res.status(201).json({
-      _id: user._id,
-      accountType: user.accountType,
-      email: user.email,
-      faculty: user.faculty,
-      fullName: user.fullName,
-      major: user.major,
-      userId: user.userId,
-      isAdmin: user.isAdmin,
-      isApproved: user.isApproved,
-      specialities: user.specialities,
-      token: generateToken(user._id),
+      message: "Akun Berhasil Dibuat",
     });
   } else {
     res.status(400);
