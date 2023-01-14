@@ -142,6 +142,7 @@ const deleteDocument = asyncHandler(async (req, res) => {
 // @access Private/User
 const updateDocument = asyncHandler(async (req, res) => {
   const { contributions, ...payload } = req.body;
+  console.log(payload);
   const documentId = req.params.id;
 
   const updatedContributions = (

@@ -13,15 +13,18 @@ const documentSchema = mongoose.Schema(
     status: {
       type: String,
       required: true,
-      enum: ["ongoing", "draft", "done", "critical"],
+      enum: ["ongoing", "draft", "done"],
       default: "ongoing",
+    },
+    version: {
+      type: String,
+      required: true,
+      default: 1,
     },
     storageDir: {
       type: String,
       required: true,
     },
-    // TODO: Remove this field
-    authors: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     contributions: [
       {
         type: mongoose.Schema.Types.ObjectId,
