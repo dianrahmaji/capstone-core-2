@@ -349,6 +349,16 @@ const getFolderByDocumentId = asyncHandler(async (req, res) => {
               as: "authors",
             },
           },
+          {
+            $lookup: {
+              from: "documents",
+              let: { documents: "$documents" },
+              pipeline: [
+                { $match: { $expr: { $in: ["$_id", "$$documents"] } } },
+              ],
+              as: "documents",
+            },
+          },
         ],
         as: "folders",
       },
@@ -360,14 +370,6 @@ const getFolderByDocumentId = asyncHandler(async (req, res) => {
         let: { documents: "$documents" },
         pipeline: [
           { $match: { $expr: { $in: ["$_id", "$$documents"] } } },
-          {
-            $lookup: {
-              from: "users",
-              let: { authors: "$authors" },
-              pipeline: [{ $match: { $expr: { $in: ["$_id", "$$authors"] } } }],
-              as: "authors",
-            },
-          },
           {
             $lookup: {
               from: "contributions",
@@ -394,6 +396,49 @@ const getFolderByDocumentId = asyncHandler(async (req, res) => {
               as: "contributions",
             },
           },
+          {
+            $lookup: {
+              from: "documents",
+              let: { references: "$references" },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $in: ["$_id", "$$references"],
+                    },
+                  },
+                },
+                {
+                  $lookup: {
+                    from: "folders",
+                    let: { id: "$_id" },
+                    pipeline: [
+                      {
+                        $match: {
+                          $expr: {
+                            $in: ["$$id", "$documents"],
+                          },
+                        },
+                      },
+                      {
+                        $graphLookup: {
+                          from: "folders",
+                          startWith: "$parent",
+                          connectFromField: "parent",
+                          connectToField: "_id",
+                          depthField: "level",
+                          as: "parent",
+                        },
+                      },
+                    ],
+                    as: "folders",
+                  },
+                },
+                { $unwind: "$folders" },
+              ],
+              as: "references",
+            },
+          },
         ],
         as: "documents",
       },
@@ -407,13 +452,12 @@ const getFolderByDocumentId = asyncHandler(async (req, res) => {
         createdAt: 1,
         updatedAt: 1,
 
+        "repositories._id": 1,
+        "repositories.title": 1,
+
         "parents._id": 1,
         "parents.name": 1,
         "parents.level": 1,
-
-        "authors._id": 1,
-        "authors.email": 1,
-        "authors.fullName": 1,
 
         "folders._id": 1,
         "folders.name": 1,
@@ -424,6 +468,10 @@ const getFolderByDocumentId = asyncHandler(async (req, res) => {
         "folders.authors._id": 1,
         "folders.authors.email": 1,
         "folders.authors.fullName": 1,
+        "folders.documents._id": 1,
+        "folders.documents.name": 1,
+        "folders.documents.url": 1,
+        "folders.documents.extension": 1,
 
         "documents._id": 1,
         "documents.name": 1,
@@ -435,6 +483,7 @@ const getFolderByDocumentId = asyncHandler(async (req, res) => {
         "documents.storageDir": 1,
         "documents.createdAt": 1,
         "documents.updatedAt": 1,
+        "documents.version": 1,
         "documents.authors._id": 1,
         "documents.authors.email": 1,
         "documents.authors.fullName": 1,
@@ -443,6 +492,13 @@ const getFolderByDocumentId = asyncHandler(async (req, res) => {
         "documents.contributions.author.email": 1,
         "documents.contributions.author.fullName": 1,
         "documents.contributions.contribution": 1,
+        "documents.references._id": 1,
+        "documents.references.name": 1,
+        "documents.references.extension": 1,
+        "documents.references.url": 1,
+        "documents.references.folders.name": 1,
+        "documents.references.folders.parent.name": 1,
+        "documents.references.folders.parent.level": 1,
       },
     },
   ]);
