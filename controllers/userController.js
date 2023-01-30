@@ -107,7 +107,8 @@ const approveUser = asyncHandler(async (req, res) => {
 // @access Private/Admin
 const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id).select("-password");
-  const { fullName, email, userId, faculty, major, accountType } = req.body;
+  const { fullName, email, userId, faculty, major, accountType, specialities } =
+    req.body;
 
   if (user) {
     user.fullName = fullName;
@@ -116,6 +117,7 @@ const updateUser = asyncHandler(async (req, res) => {
     user.faculty = faculty;
     user.major = major;
     user.accountType = accountType;
+    user.specialities = specialities;
 
     const updatedUser = await user.save();
     res.status(200).json(updatedUser);

@@ -20,7 +20,7 @@ router.post("/login", authUser);
 router
   .route("/:id")
   .get(protect, admin, getUserById)
-  .put(protect, admin, updateUser)
+  .put(protect, updateUser)
   .delete(protect, admin, deleteUser);
 router.route("/:id/team").get(protect, getTeamsByUserId);
 router.route("/:id/approve").put(protect, admin, approveUser);
