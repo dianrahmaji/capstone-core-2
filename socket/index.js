@@ -25,6 +25,12 @@ export default function createSocketServer(app) {
     socket.removeAllListeners();
     console.log("Connected to socket.io");
 
+    socket.on("join_room", (roomId) => {
+      socket.join(roomId);
+      console.log("User joins", roomId);
+      socket.emit("joined_room");
+    });
+
     socket.on("send_message", async (roomId, { body, sender, type, url }) => {
       const message = await Message.create({ body, sender, type, url });
       console.log(message);
@@ -38,7 +44,7 @@ export default function createSocketServer(app) {
       io.in(roomId)
         .allSockets()
         .then((members) => console.log(members));
-      socket.to(roomId).emit("receive_message", message);
+      socket.to(roomId).emit("receive_message", [message]);
     });
 
     socket.on("disconnect", () => {
