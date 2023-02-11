@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${PORT}
+      MONGODB_URI: ${MONGODB_URI}
+      MONGODB_LOCAL_URI: ${MONGODB_LOCAL_URI}
+      JWT_SECRET: ${JWT_SECRET}
+    command: yarn start
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+      - /app/node_modules
